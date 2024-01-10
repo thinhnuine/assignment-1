@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./Home.css";
 import { Link, useNavigate } from "react-router-dom";
-import Modal from "../Modal";
+// import Modal from "../Modal";
 import { useUser } from "../../UserContext";
-
+import { Badge, Button, Divider, Drawer, Input, Modal, Space } from "antd";
+import { ShoppingCartOutlined, MenuOutlined } from "@ant-design/icons";
+const { Search } = Input;
 const Header = () => {
   const navigate = new useNavigate();
 
@@ -14,6 +16,7 @@ const Header = () => {
   };
 
   const [handleModal, setHandleModal] = useState(false);
+  const [menuMobile, setMenuMobile] = useState(false);
   const [login, setLogin] = useState(true);
 
   //Login
@@ -96,141 +99,215 @@ const Header = () => {
   return (
     <>
       <div>
-        <div className="topbar">
-          <div className="container">
-            <div className="form-search">
-              <input type="text" placeholder="Tìm kiếm sản phẩm" />
-              <div style={{ cursor: "pointer" }} className="icon">
+        <div className="bg-[#f5f5f5] py-2.5">
+          <div className="container hidden lg:block">
+            <div className="flex items-center justify-end">
+              <input
+                type="text"
+                placeholder="Tìm kiếm sản phẩm"
+                className="p-2.5 w-[250px] border border-[#3c3c3]"
+              />
+              <div className="cursor-pointer  bg-[#545457] text-white px-3 py-2.5  rounded-sm">
                 <i className="fa-solid fa-magnifying-glass" />
               </div>
-            </div>
-            <ul>
-              {name ? (
-                <>
-                  {" "}
-                  <li>
-                    <Link to="/profile">
-                      <a style={{ color: "black" }}>
-                        <i class="fa-regular fa-user"></i>
-                        {` ${name.email.split("@")[0]}`}
+              <ul>
+                {name ? (
+                  <>
+                    {" "}
+                    <li>
+                      <Link to="/profile">
+                        <a style={{ color: "black" }}>
+                          <i class="fa-regular fa-user"></i>
+                          {` ${name.email.split("@")[0]}`}
+                        </a>
+                      </Link>{" "}
+                      <a href="#" onClick={handleOnclick}>
+                        ĐĂNG XUẤT
                       </a>
-                    </Link>{" "}
-                    <a href="#" onClick={handleOnclick}>
-                      ĐĂNG XUẤT
+                    </li>{" "}
+                  </>
+                ) : (
+                  <li>
+                    <a
+                      className="login-header-hover cursor-pointer ml-4"
+                      onClick={() => setHandleModal(!handleModal)}
+                    >
+                      ĐĂNG NHẬP
                     </a>
-                  </li>{" "}
-                </>
-              ) : (
-                <li>
-                  <a
-                    className="login-header-hover"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setHandleModal(!handleModal)}
-                  >
-                    ĐĂNG NHẬP
-                  </a>
-                </li>
-              )}
-            </ul>
-            <div style={{ cursor: "pointer" }} className="cart">
-              <Link to="/card">
-                <i className="fa-solid fa-cart-shopping" />
-              </Link>
-              <span>0</span>
-              {/* <span>{setUser.cart.cartDetail.length()}</span> */}
+                  </li>
+                )}
+              </ul>
+              <Badge count={5}>
+                <ShoppingCartOutlined className="text-[40px] ml-5 text-red-500 cursor-pointer" />
+              </Badge>
             </div>
           </div>
-        </div>
-        <header>
-          <div className="container">
-            <ul>
-              <li>
+          <div>
+            <div className="flex lg:hidden justify-between container">
+              <MenuOutlined
+                className="text-[20px]"
+                onClick={() => setMenuMobile(true)}
+              />
+
+              <Link to="/">
+                <img
+                  src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo.png?1692958575148"
+                  alt=""
+                />
+              </Link>
+
+              <div className="flex items-center gap-3">
+                <div className="cursor-pointer text-[#999] text-[20px]">
+                  <i className="fa-solid fa-magnifying-glass" />
+                </div>
+                <Badge count={5}>
+                  <ShoppingCartOutlined className="text-[30px]  text-red-500 cursor-pointer" />
+                </Badge>
+              </div>
+            </div>
+          </div>
+
+          <Drawer
+            title="Menu"
+            placement={"left"}
+            closable={false}
+            onClose={() => {
+              setMenuMobile(false);
+            }}
+            open={menuMobile}
+          >
+            <ul className="">
+              <li className="cursor-pointer list-disc">
                 <Link to="/">TRANG CHỦ</Link>
               </li>
-              <li>
+
+              <li className="list-disc">
+                <Link to="/shop">Tất cả sản phẩm</Link>
+              </li>
+              <div className="ml-4">
+                <li>
+                  <Link href="#">Áo Thun</Link>
+                </li>
+                <li>
+                  <Link href="#">Baby Tee</Link>
+                </li>
+                <li>
+                  <Link href="#">Áo Polo</Link>
+                </li>
+                <li>
+                  <Link href="#">Áo sơ mi</Link>
+                </li>
+                <li>
+                  <Link href="#">Áo khoác</Link>
+                </li>
+                <li>
+                  <Link href="#">Hoodie</Link>
+                </li>
+                <li>
+                  <Link href="#">Quần</Link>
+                </li>
+                <li>
+                  <Link href="#">Quần nữ</Link>
+                </li>
+                <li>
+                  <Link href="#">Phụ kiện</Link>
+                </li>
+              </div>
+              <li className="cursor-pointer list-disc">
                 <a href>CHÍNH SÁCH ĐỔI TRẢ</a>
               </li>
-              <li>
-                <Link to="/">
-                  <img
-                    src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo.png?1692958575148"
-                    alt=""
-                  />
-                </Link>
-              </li>
-              <li>
+
+              <li className="cursor-pointer list-disc">
                 <a href>BẢNG SIZE</a>
               </li>
-              <li>
+              <li className="cursor-pointer list-disc">
                 <a href>HỆ THỐNG CỦA HÀNG</a>
               </li>
             </ul>
-          </div>
-          <div className="container menu">
-            <ul>
-              <li>
-                <Link to="/shop">Tất cả sản phẩm</Link>
-              </li>
-              <li>
-                <a href>Áo Thun</a>
-              </li>
-              <li>
-                <a href>Baby Tee</a>
-              </li>
-              <li>
-                <a href>Áo Polo</a>
-              </li>
-              <li>
-                <a href>Áo sơ mi</a>
-              </li>
-              <li>
-                <a href>Áo khoác</a>
-              </li>
-              <li>
-                <a href>Hoodie</a>
-              </li>
-              <li>
-                <a href>Quần</a>
-              </li>
-              <li>
-                <a href>Quần nữ</a>
-              </li>
-              <li>
-                <a href>phụ kiện</a>
-              </li>
-            </ul>
-          </div>
+          </Drawer>
+        </div>
+
+        <header className="container hidden lg:block">
+          <ul className="flex container items-center justify-between pt-6 text-lg px-24">
+            <li className="cursor-pointer">
+              <Link to="/">TRANG CHỦ</Link>
+            </li>
+            <li className="cursor-pointer">
+              <a href>CHÍNH SÁCH ĐỔI TRẢ</a>
+            </li>
+            <li className="cursor-pointer">
+              <Link to="/">
+                <img
+                  src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo.png?1692958575148"
+                  alt=""
+                />
+              </Link>
+            </li>
+            <li className="cursor-pointer">
+              <a href>BẢNG SIZE</a>
+            </li>
+            <li className="cursor-pointer">
+              <a href>HỆ THỐNG CỦA HÀNG</a>
+            </li>
+          </ul>
+          <Divider />
+          <ul className="flex container justify-between items-center px-40 text-base mb-4">
+            <li>
+              <Link to="/shop">Tất cả sản phẩm</Link>
+            </li>
+            <li>
+              <Link href="#">Áo Thun</Link>
+            </li>
+            <li>
+              <Link href="#">Baby Tee</Link>
+            </li>
+            <li>
+              <Link href="#">Áo Polo</Link>
+            </li>
+            <li>
+              <Link href="#">Áo sơ mi</Link>
+            </li>
+            <li>
+              <Link href="#">Áo khoác</Link>
+            </li>
+            <li>
+              <Link href="#">Hoodie</Link>
+            </li>
+            <li>
+              <Link href="#">Quần</Link>
+            </li>
+            <li>
+              <Link href="#">Quần nữ</Link>
+            </li>
+            <li>
+              <Link href="#">Phụ kiện</Link>
+            </li>
+          </ul>
         </header>
       </div>
-      <Modal handleModal={handleModal} setHandleModal={setHandleModal}>
-        <a
-          style={{
-            color: "red",
-            fontSize: "24px",
-            display: "inline-flex",
-            width: "100%",
-            height: "100%",
-            justifyContent: "end",
-            cursor: "pointer",
-          }}
-          onClick={() => setHandleModal(!handleModal)}
-        >
-          X
-        </a>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <img
-            src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo.png?1692958575148"
-            alt=""
-          />
-        </div>
+      <Modal
+        open={handleModal}
+        handleModal={handleModal}
+        footer={null}
+        width={550}
+        onCancel={() => {
+          setLogin(true);
+          setHandleModal(false);
+        }}
+      >
         {login ? (
           <div>
-            <div className="login">
-              <h1 style={{ marginBottom: "10px" }}>Đăng nhập</h1>
+            <div className="max-w-[500px] mx-auto">
+              <h1
+                className="text-3xl font-bold"
+                style={{ marginBottom: "10px" }}
+              >
+                Đăng nhập
+              </h1>
 
               <p>Vui lòng nhập thông tin tài khoản</p>
               <hr />
-              <label htmlFor="username">
+              <label htmlFor="username" className="mt-2">
                 <b>Tên đăng nhập</b>
               </label>
               <input
@@ -273,31 +350,32 @@ const Header = () => {
               />
 
               <hr />
-              <button onClick={handleLogin} type="submit" className="submit">
+              <Button
+                type="primary"
+                onClick={handleLogin}
+                htmlType="submit"
+                className="bg-green-500 w-full "
+                size="large"
+              >
                 Đăng nhập
-              </button>
+              </Button>
             </div>
-            <div className="register-login">
-              <p>
-                Bạn chưa có tài khoản?{" "}
-                <a
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setLogin(!login)}
-                >
-                  Đăng ký
-                </a>
-                .
-              </p>
-            </div>
+            <p className="text-base mt-1">
+              Bạn chưa có tài khoản?{" "}
+              <Link className="text-blue-500" onClick={() => setLogin(!login)}>
+                Đăng ký
+              </Link>
+              .
+            </p>
           </div>
         ) : (
           <div>
             <div className="register">
-              <h1 style={{ marginBottom: "10px" }}>Đăng ký</h1>
+              <h1 className="text-3xl font-bold">Đăng ký</h1>
               <p>Vui lòng điền thông tin để đăng ký</p>
               <hr />
 
-              <label htmlFor="username">
+              <label htmlFor="username" className="mt-2">
                 <b>Tên đăng nhập</b>
               </label>
               <input
@@ -366,30 +444,32 @@ const Header = () => {
               />
 
               <hr />
-              <p>
+              <p className="mt-1 text-sm">
                 Để tạo tài khoản vui lòng đồng ý với điều khoản của chúng tôi{" "}
-                <a style={{ cursor: "pointer" }} href="#">
-                  Terms &amp; Privacy
-                </a>
-                .
+                <Link className="text-blue-500">Terms &amp; Privacy</Link>.
               </p>
 
-              <button onClick={handleAddUser} type="submit" className="submit">
+              <Button
+                type="primary"
+                onClick={handleAddUser}
+                htmlType="submit"
+                className="bg-green-500 w-full "
+                size="large"
+              >
                 Đăng ký
-              </button>
+              </Button>
             </div>
-            <div className="register-login">
-              <p>
-                Bạn đã có tài khoản rồi?{" "}
-                <a
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setLogin(!login)}
-                >
-                  Đăng nhập
-                </a>
-                .
-              </p>
-            </div>
+            <p className="mt-1 text-sm">
+              Bạn đã có tài khoản rồi?{" "}
+              <Link
+                className="text-blue-500"
+                style={{ cursor: "pointer" }}
+                onClick={() => setLogin(!login)}
+              >
+                Đăng nhập
+              </Link>
+              .
+            </p>
           </div>
         )}
       </Modal>

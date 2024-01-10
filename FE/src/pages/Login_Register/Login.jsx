@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./assets/CSS/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {

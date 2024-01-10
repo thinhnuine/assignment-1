@@ -5,14 +5,14 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 const Home = () => {
-    return(
-        <>
-            <Header />
-            <Slide/>
-            <Product />
-            <Footer />
-        </>
-    );
+  return (
+    <>
+      <Header />
+      <Slide />
+      <Product />
+      <Footer />
+    </>
+  );
 };
 
 export default Home;
