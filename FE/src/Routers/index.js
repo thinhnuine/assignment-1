@@ -12,21 +12,31 @@ import Detail from "../pages/Home/Detail";
 const Routers = () => {
   const isAuthenticated = !!localStorage.getItem("user");
   console.log(isAuthenticated);
-  
 
   return (
     <>
       <Routes>
-      
-        <Route path="/admin"
-          element={isAuthenticated &&
-            JSON.parse(localStorage.getItem("user/admin"))?.role === "admin" ? 
-            <Admin /> : <Navigate to="/login" />}
+        <Route
+          path="/admin"
+          element={
+            isAuthenticated &&
+            JSON.parse(localStorage.getItem("user/admin"))?.role === "admin" ? (
+              <Admin />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
-        <Route path="/login"
-          element={isAuthenticated &&
-            JSON.parse(localStorage.getItem("user/admin"))?.role === "admin" ?
-             <Navigate to="/admin" /> : <Login />}
+        <Route
+          path="/login"
+          element={
+            isAuthenticated &&
+            JSON.parse(localStorage.getItem("user/admin"))?.role === "admin" ? (
+              <Navigate to="/admin" />
+            ) : (
+              <Login />
+            )
+          }
         />
 
         <Route path="/" element={<Home />} />

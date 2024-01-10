@@ -35,40 +35,41 @@ const Login = () => {
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify({ email: userName, password }), // body data type must match "Content-Type" header
     });
-    response.then((res) => res.json().then((data) => {
-      if(data.email === userName){
-        localStorage.setItem("user/admin", JSON.stringify(data));
-        // setHandleModal(!handleModal)
-        
-        alert("Đăng nhập thành công!")
-        navigate("/admin");
-      }
-      else{
-        alert("Tài khoản của bạn không phải admin");
-      }
-    }));
+    response.then((res) =>
+      res.json().then((data) => {
+        if (data.email === userName) {
+          localStorage.setItem("user/admin", JSON.stringify(data));
+          // setHandleModal(!handleModal)
+
+          alert("Đăng nhập thành công!");
+          navigate("/admin");
+        } else {
+          alert("Tài khoản của bạn không phải admin");
+        }
+      })
+    );
   };
 
   return (
     <div>
       <div className="login">
-        <h1>Đăng nhập</h1>
+        <h1>Đăng nhậpaaa</h1>
         <p>Vui lòng nhập thông tin tài khoản</p>
         <hr />
         <label htmlFor="username">
           <b>Tên đăng nhập</b>
         </label>
         <input
-        style={{
-                width: '100%',
-                padding: '15px',
-                margin: '10px 0 22px 0',
-                display: 'inline-block',
-                border: 'none',
-                background: '#ffffff',
-                backgroundColor: '#ddd',
-                outline: 'none'
-              }}
+          style={{
+            width: "100%",
+            padding: "15px",
+            margin: "10px 0 22px 0",
+            display: "inline-block",
+            border: "none",
+            background: "#ffffff",
+            backgroundColor: "#ddd",
+            outline: "none",
+          }}
           onChange={(event) => setUserName(event.target.value)}
           type="text"
           placeholder="Mời nhập tên tài khoản"
@@ -80,16 +81,16 @@ const Login = () => {
           <b>Mật khẩu</b>
         </label>
         <input
-        style={{
-                width: '100%',
-                padding: '15px',
-                margin: '10px 0 22px 0',
-                display: 'inline-block',
-                border: 'none',
-                background: '#ffffff',
-                backgroundColor: '#ddd',
-                outline: 'none'
-              }}
+          style={{
+            width: "100%",
+            padding: "15px",
+            margin: "10px 0 22px 0",
+            display: "inline-block",
+            border: "none",
+            background: "#ffffff",
+            backgroundColor: "#ddd",
+            outline: "none",
+          }}
           onChange={(event) => setPassword(event.target.value)}
           type="password"
           placeholder="******"
@@ -102,7 +103,6 @@ const Login = () => {
           Đăng nhập
         </button>
       </div>
-      
     </div>
   );
 };

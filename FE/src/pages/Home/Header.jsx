@@ -16,17 +16,16 @@ const Header = () => {
   const [handleModal, setHandleModal] = useState(false);
   const [login, setLogin] = useState(true);
 
-
   //Login
-  
+
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {}, []);
-  const setUser = useContext( useUser );
+  const setUser = useContext(useUser);
 
   const { updateUser } = useUser();
-  const  handleLogin = async () => {
+  const handleLogin = async () => {
     const response = await fetch("http://localhost:8000/user/login", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, *cors, same-origin
@@ -39,21 +38,20 @@ const Header = () => {
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify({ email: userName, password }), // body data type must match "Content-Type" header
-    }).
-    then((res) => res.json().then((data) => {
-      if(data.email === userName){
-        localStorage.setItem("user", JSON.stringify(data));
-        setHandleModal(!handleModal)
-        navigate("/");
-        alert("Đăng nhập thành công!")
-      }
-      else{
-        alert("Tài khoản hoặc mật khẩu sai!");
-      }
-    }));
+    }).then((res) =>
+      res.json().then((data) => {
+        if (data.email === userName) {
+          localStorage.setItem("user", JSON.stringify(data));
+          setHandleModal(!handleModal);
+          navigate("/");
+          alert("Đăng nhập thành công!");
+        } else {
+          alert("Tài khoản hoặc mật khẩu sai!");
+        }
+      })
+    );
     updateUser();
   };
-
 
   const [userNameRegister, setUserNameRegister] = useState("");
   const [passwordRegister, setPasswordRegister] = useState("");
@@ -71,25 +69,28 @@ const Header = () => {
       },
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify({ email: userNameRegister, password: passwordRegister }), // body data type must match "Content-Type" header
+      body: JSON.stringify({
+        email: userNameRegister,
+        password: passwordRegister,
+      }), // body data type must match "Content-Type" header
     });
 
-    
-    response.then((res) => res.json().then((data) =>{
-      console.log(data);
-      if(checkPasswordRegister != passwordRegister){
-        alert("Mật khẩu không trùng khớp!");
-        return false;
-      } else if(userNameRegister === data.email){
-        alert("Tài khoản đã tồn tại!")
-        return false;
-      }else{
-        setHandleModal(!handleModal)
-        alert("Bạn đã lập tài khoản thành công!");
-        navigate("/");
-      }
-
-    }));
+    response.then((res) =>
+      res.json().then((data) => {
+        console.log(data);
+        if (checkPasswordRegister != passwordRegister) {
+          alert("Mật khẩu không trùng khớp!");
+          return false;
+        } else if (userNameRegister === data.email) {
+          alert("Tài khoản đã tồn tại!");
+          return false;
+        } else {
+          setHandleModal(!handleModal);
+          alert("Bạn đã lập tài khoản thành công!");
+          navigate("/");
+        }
+      })
+    );
   };
 
   return (
@@ -121,7 +122,8 @@ const Header = () => {
                 </>
               ) : (
                 <li>
-                  <a className="login-header-hover"
+                  <a
+                    className="login-header-hover"
                     style={{ cursor: "pointer" }}
                     onClick={() => setHandleModal(!handleModal)}
                   >
@@ -131,7 +133,9 @@ const Header = () => {
               )}
             </ul>
             <div style={{ cursor: "pointer" }} className="cart">
-            <Link to="/card"><i className="fa-solid fa-cart-shopping" /></Link>
+              <Link to="/card">
+                <i className="fa-solid fa-cart-shopping" />
+              </Link>
               <span>0</span>
               {/* <span>{setUser.cart.cartDetail.length()}</span> */}
             </div>
@@ -199,7 +203,6 @@ const Header = () => {
         </header>
       </div>
       <Modal handleModal={handleModal} setHandleModal={setHandleModal}>
-        
         <a
           style={{
             color: "red",
@@ -214,28 +217,33 @@ const Header = () => {
         >
           X
         </a>
-        <div style={{display:'flex', justifyContent: "center"}}><img  src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo.png?1692958575148" alt="" /></div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo.png?1692958575148"
+            alt=""
+          />
+        </div>
         {login ? (
           <div>
             <div className="login">
-              <h1 style={{marginBottom: '10px'}}>Đăng nhập</h1>
-              
+              <h1 style={{ marginBottom: "10px" }}>Đăng nhập</h1>
+
               <p>Vui lòng nhập thông tin tài khoản</p>
               <hr />
               <label htmlFor="username">
                 <b>Tên đăng nhập</b>
               </label>
               <input
-              style={{
-                width: '100%',
-                padding: '15px',
-                margin: '10px 0 22px 0',
-                display: 'inline-block',
-                border: 'none',
-                background: '#ffffff',
-                backgroundColor: '#ddd',
-                outline: 'none'
-              }}
+                style={{
+                  width: "100%",
+                  padding: "15px",
+                  margin: "10px 0 22px 0",
+                  display: "inline-block",
+                  border: "none",
+                  background: "#ffffff",
+                  backgroundColor: "#ddd",
+                  outline: "none",
+                }}
                 onChange={(event) => setUserName(event.target.value)}
                 type="text"
                 placeholder="Mời nhập tên tài khoản"
@@ -247,16 +255,16 @@ const Header = () => {
                 <b>Mật khẩu</b>
               </label>
               <input
-              style={{
-                width: '100%',
-                padding: '15px',
-                margin: '10px 0 22px 0',
-                display: 'inline-block',
-                border: 'none',
-                background: '#ffffff',
-                backgroundColor: '#ddd',
-                outline: 'none'
-              }}
+                style={{
+                  width: "100%",
+                  padding: "15px",
+                  margin: "10px 0 22px 0",
+                  display: "inline-block",
+                  border: "none",
+                  background: "#ffffff",
+                  backgroundColor: "#ddd",
+                  outline: "none",
+                }}
                 onChange={(event) => setPassword(event.target.value)}
                 type="password"
                 placeholder="******"
@@ -285,7 +293,7 @@ const Header = () => {
         ) : (
           <div>
             <div className="register">
-              <h1 style={{marginBottom: '10px'}}>Đăng ký</h1>
+              <h1 style={{ marginBottom: "10px" }}>Đăng ký</h1>
               <p>Vui lòng điền thông tin để đăng ký</p>
               <hr />
 
@@ -293,16 +301,16 @@ const Header = () => {
                 <b>Tên đăng nhập</b>
               </label>
               <input
-              style={{
-                width: '100%',
-                padding: '15px',
-                margin: '10px 0 22px 0',
-                display: 'inline-block',
-                border: 'none',
-                background: '#ffffff',
-                backgroundColor: '#ddd',
-                outline: 'none'
-              }}
+                style={{
+                  width: "100%",
+                  padding: "15px",
+                  margin: "10px 0 22px 0",
+                  display: "inline-block",
+                  border: "none",
+                  background: "#ffffff",
+                  backgroundColor: "#ddd",
+                  outline: "none",
+                }}
                 value={userNameRegister}
                 onChange={(event) => setUserNameRegister(event.target.value)}
                 type="text"
@@ -315,16 +323,16 @@ const Header = () => {
                 <b>Mật khẩu</b>
               </label>
               <input
-              style={{
-                width: '100%',
-                padding: '15px',
-                margin: '10px 0 22px 0',
-                display: 'inline-block',
-                border: 'none',
-                background: '#ffffff',
-                backgroundColor: '#ddd',
-                outline: 'none'
-              }}
+                style={{
+                  width: "100%",
+                  padding: "15px",
+                  margin: "10px 0 22px 0",
+                  display: "inline-block",
+                  border: "none",
+                  background: "#ffffff",
+                  backgroundColor: "#ddd",
+                  outline: "none",
+                }}
                 value={passwordRegister}
                 onChange={(event) => setPasswordRegister(event.target.value)}
                 type="password"
@@ -337,18 +345,20 @@ const Header = () => {
                 <b>Nhập lại mật khẩu</b>
               </label>
               <input
-              style={{
-                width: '100%',
-                padding: '15px',
-                margin: '10px 0 22px 0',
-                display: 'inline-block',
-                border: 'none',
-                background: '#ffffff',
-                backgroundColor: '#ddd',
-                outline: 'none'
-              }}
+                style={{
+                  width: "100%",
+                  padding: "15px",
+                  margin: "10px 0 22px 0",
+                  display: "inline-block",
+                  border: "none",
+                  background: "#ffffff",
+                  backgroundColor: "#ddd",
+                  outline: "none",
+                }}
                 value={checkPasswordRegister}
-                onChange={(event) => setCheckPasswordRegister(event.target.value)}
+                onChange={(event) =>
+                  setCheckPasswordRegister(event.target.value)
+                }
                 type="password"
                 placeholder="******"
                 name="password-repeat"
@@ -364,11 +374,7 @@ const Header = () => {
                 .
               </p>
 
-              <button
-                onClick={handleAddUser}
-                type="submit"
-                className="submit"
-              >
+              <button onClick={handleAddUser} type="submit" className="submit">
                 Đăng ký
               </button>
             </div>
