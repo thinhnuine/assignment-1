@@ -1,0 +1,11 @@
+@import "react-slideshow-image/dist/styles.css";
+
+
+.containerSlide {
+    width: 700px;
+    margin: auto;
+}
+
+.containerSlide img {
+    height: 700px;
+}

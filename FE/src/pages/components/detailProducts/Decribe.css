@@ -1,0 +1,14 @@
+.desc-container{
+    padding: 0 200px;
+    max-width: 46%;
+}
+.desc-img{
+   width: -webkit-fill-available;
+}
+
+.desc-header{
+    border: 1px solid black;
+    border-radius: 5px;
+    width: fit-content;
+    padding: 10px 50px;
+}

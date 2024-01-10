@@ -1,0 +1,323 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+}
+
+.topbar {
+    background: #F5F5F5;
+    width: 100vw;
+    padding: 10px 0;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.form-search {
+    display: flex;
+    align-items: center;
+
+}
+
+.form-search input {
+    padding: 12px;
+    width: 250px;
+}
+
+.form-search .icon {
+    padding: 12px;
+    background: #545457;
+    color: white;
+}
+
+.topbar .cart {
+    font-size: 32px;
+    color: red;
+    position: relative;
+}
+
+.topbar .cart span {
+    position: absolute;
+    width: 19px;
+    line-height: 19px;
+    background: red;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    top: -10px;
+    right: -10px;
+    font-size: 14px;
+}
+
+/* 
+header .container {
+    justify-content: space-between;
+} */
+
+header {
+    margin-top: 12px;
+}
+
+header .container ul {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header .container a {
+    color: black;
+    text-transform: uppercase;
+    font-size: 20px;
+}
+
+header .menu {
+    margin-top: 36px;
+}
+
+header .menu ul {
+    justify-content: space-around;
+}
+
+header .menu a {
+    font-size: 16px;
+}
+
+
+.slider {
+    width: 100%;
+    max-width: 100vw;
+    height: 600px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 24px;
+}
+
+.slider .list {
+    position: absolute;
+    width: max-content;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: flex;
+    transition: 1s;
+}
+
+.slider .list img {
+    width: 100vw;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slider .buttons {
+    position: absolute;
+    top: 45%;
+    left: 5%;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.slider .buttons button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #fff5;
+    color: #fff;
+    border: none;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.slider .dots {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    color: #fff;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.slider .dots li {
+    list-style: none;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    margin: 10px;
+    border-radius: 20px;
+    transition: 0.5s;
+}
+
+.slider .dots li.active {
+    width: 30px;
+}
+
+footer {
+    margin-top: 24px;
+    background: #000;
+    padding: 100px 0;
+}
+
+footer .container {
+    align-items: start;
+    color: white;
+}
+
+footer h3 {
+    margin-bottom: 24px;
+}
+
+footer .container .left,
+footer .container .center,
+footer .container .right {
+    flex: 1;
+}
+
+
+footer .container .left h3 {
+    letter-spacing: 8px;
+    font-size: 32px;
+}
+
+footer ul li {
+    margin-bottom: 16px;
+}
+
+footer ul li a {
+    color: #999999;
+    font-size: 20px;
+}
+
+footer .left li {
+    width: 80%;
+}
+
+footer .left li a {
+    display: flex;
+    gap: 12px;
+    line-height: 1.5;
+}
+
+footer .left li a i {
+    color: #d64646;
+    font-size: 24px;
+}
+
+
+footer .center {
+    text-align: center;
+}
+
+footer .center h3,
+footer .right h3 {
+    font-size: 24px;
+    color: #999999;
+}
+
+footer .center-email {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+    background: white;
+    width: 100%;
+    margin: 12px auto;
+    padding: 4px;
+}
+
+footer .center-email input {
+    outline: none;
+    border: none;
+    flex: 1;
+    padding: 8px;
+}
+
+footer .center-email .send {
+    /* width: 24px; */
+    background: #646464;
+    padding: 8px;
+}
+
+footer .center p {
+    color: #999999;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+footer .center ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+footer .right {
+    margin-left: 48px;
+}
+
+.section_about {
+    text-align: center;
+    padding: 60px 15px;
+    display: block;
+}
+
+.section_about .title {
+    font-size: 35px;
+    margin-bottom: 25px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.section_about .content {
+    width: 685px;
+    max-width: 100%;
+    margin: 0 auto;
+    margin-bottom: 25px;
+    position: relative;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    padding: 24px;
+    background: white;
+}
+
+.profile-content {
+    font-size: 32px;
+    background-image: url(https://decorbanghieu.com/wp-content/uploads/2022/08/background-shop-quan-ao-1-1067x800.jpg);
+}
+
+a:visited {
+    color: rgb(0, 0, 0);
+}
+
+a:hover {
+    color: rgb(247, 3, 3);
+}

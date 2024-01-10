@@ -1,0 +1,158 @@
+/* Your existing CSS styles */
+
+.product {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+
+.containerz {
+  width: 25%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.containerz:hover {
+  box-shadow: 0 10px 8px rgba(78, 126, 59, 0.826);
+}
+
+.containerz img {
+  max-width: 60%;
+  height: auto;
+}
+
+.price-math {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.cart-icon {
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  border-radius: 10px;
+  background-color: #4cafa8;
+  color: white;
+  display: inline-block;
+  padding: 10px;
+}
+
+.cart-icon:hover {
+  transform: scale(1.2);
+}
+
+.cart-icon:active {
+  transform: scale(1.5);
+}
+
+.name {
+  visibility: hidden;
+}
+
+.price-math h4,
+.price-math del {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 0 5px;
+  text-align: center;
+  font-size: 20px;
+}
+
+p {
+  font-size: 20px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.product p {
+  font-weight: bold;
+  margin-top: 5px;
+  font-size: 20px;
+}
+
+.color {
+  color: #45a049;
+}
+
+h4 {
+  color: #e71b1b;
+}
+
+.delete {
+  text-decoration: line-through;
+}
+
+/* Responsive styles */
+
+@media (max-width: 1200px) {
+  .containerz {
+    width: 30%;
+  }
+}
+
+@media (max-width: 992px) {
+  .containerz {
+    width: 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .containerz {
+    width: 100%;
+  }
+}
+
+/* Additional responsive styles if needed */
+
+/* For smaller screens, adjust the font size of h4 and del */
+@media (max-width: 480px) {
+  .price-math h4,
+  .price-math del {
+    font-size: 16px;
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .product p {
+    font-size: 18px;
+  }
+}
+
+/* For even smaller screens, further adjust styles */
+@media (max-width: 320px) {
+  .price-math h4,
+  .price-math del {
+    font-size: 14px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .product p {
+    font-size: 16px;
+  }
+}
