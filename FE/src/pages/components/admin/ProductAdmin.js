@@ -21,9 +21,8 @@ const ManageProduct = () => {
   const [products, setProducts] = useState([]);
   const [count, setCount] = useState(0);
   const toast = useToast();
-  const [variantId, setVariantId] = useState()
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
-
+  const [variantId, setVariantId] = useState();
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const transformData = (data) => {
     return data.map((item) => {
@@ -47,12 +46,14 @@ const ManageProduct = () => {
   };
   const handleDeleteVariant = async (variantId) => {
     try {
-      await axios.delete(`http://localhost:8000/admin/variant/${variantId}`,{
+      await axios.delete(`http://localhost:8000/admin/variant/${variantId}`, {
         headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
+          Authorization: "Bearer " + accessToken,
+        },
       });
-      setProducts((prevOrders) => prevOrders.filter((order) => order.variants._id !== variantId));
+      setProducts((prevOrders) =>
+        prevOrders.filter((order) => order.variants._id !== variantId)
+      );
       toast({
         status: "success",
         title: "Xoá sản phẩm thành công",
@@ -64,17 +65,19 @@ const ManageProduct = () => {
         title: "Delete product failed",
         position: "top",
       });
-      console.error('Error deleting order:', error);
+      console.error("Error deleting order:", error);
     }
   };
   const handleDeleteOrder = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:8000/admin/product/${orderId}`,{
+      await axios.delete(`http://localhost:8000/admin/product/${orderId}`, {
         headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
+          Authorization: "Bearer " + accessToken,
+        },
       });
-      setProducts((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
+      setProducts((prevOrders) =>
+        prevOrders.filter((order) => order._id !== orderId)
+      );
       toast({
         status: "success",
         title: "Xoá sản phẩm thành công",
@@ -86,7 +89,7 @@ const ManageProduct = () => {
         title: "Delete product failed",
         position: "top",
       });
-      console.error('Error deleting order:', error);
+      console.error("Error deleting order:", error);
     }
   };
 
@@ -135,7 +138,7 @@ const ManageProduct = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <CreateVariant id={record._id}/>
+          <CreateVariant id={record._id} />
           <EditProduct id={record._id} />
           <Popconfirm
             style={{ color: "red" }}
@@ -158,7 +161,7 @@ const ManageProduct = () => {
         title: "Image",
         dataIndex: "image",
         key: "image",
-        render: (_,variants) => (
+        render: (_, variants) => (
           <>
             <img
               width={40}
@@ -208,19 +211,19 @@ const ManageProduct = () => {
         title: "Action",
         dataIndex: "operation",
         key: "operation",
-        render: (_,variants) => (
+        render: (_, variants) => (
           <Space size="middle">
-            <EditVariant id={variants._id}/>
+            <EditVariant id={variants._id} />
             <Popconfirm
-            style={{ color: "red" }}
-            title="Delete product"
-            description="Are you sure to delete this product?"
-            onConfirm={() => {
-              handleDeleteVariant(variants._id);
-            }}
-          >
-            <a style={{ color: "red" }}>Delete</a>
-          </Popconfirm>
+              style={{ color: "red" }}
+              title="Delete product"
+              description="Are you sure to delete this product?"
+              onConfirm={() => {
+                handleDeleteVariant(variants._id);
+              }}
+            >
+              <a style={{ color: "red" }}>Delete</a>
+            </Popconfirm>
           </Space>
         ),
       },

@@ -9,8 +9,7 @@ const EditProduct = (id) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const toast = useToast();
-  const { accessToken} = JSON.parse(localStorage.getItem("user"))
-
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const showModal = () => {
     setOpen(true);
@@ -48,24 +47,28 @@ const EditProduct = (id) => {
   };
 
   const onFinish = async (values) => {
-    console.log(values)
+    console.log(values);
     try {
-    const result = await axios.put(`http://localhost:8000/admin/product/${id.id}`, {
-        name: values.name,
-        slug: values.slug,
-        detailProduct: {
+      const result = await axios.put(
+        `http://localhost:8000/admin/product/${id.id}`,
+        {
+          name: values.name,
+          slug: values.slug,
+          detailProduct: {
             material: values.material,
             form: values.form,
             color: values.color,
             design: values.design,
             image: values.image,
           },
-          thumbnail: values.thumbnail
-      },{
-        headers: {
-          Authorization: 'Bearer ' + accessToken
+          thumbnail: values.thumbnail,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
         }
-      });
+      );
 
       toast({
         status: "success",
@@ -99,12 +102,19 @@ const EditProduct = (id) => {
         onCancel={handleCancel}
         width={700}
         footer={[
-            <Button key="back" onClick={handleCancel}>
-              Cancel
-            </Button>,
-            <Button key="submit" form="myForm" type="primary" htmlType="submit"  onClick={handleOk}>
-              Submit
-            </Button>]}
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            form="myForm"
+            type="primary"
+            htmlType="submit"
+            onClick={handleOk}
+          >
+            Submit
+          </Button>,
+        ]}
       >
         <Form
           form={form}

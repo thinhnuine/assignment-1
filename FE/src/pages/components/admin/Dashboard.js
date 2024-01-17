@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Card, Space, Statistic, Table, Typography } from "antd";
 import { Button, Popconfirm, Form, Select, Input } from "antd";
-import {  Divider, Flex, Radio } from 'antd';
+import { Divider, Flex, Radio } from "antd";
 
 import { useEffect, useState } from "react";
 // import { getCustomers, getInventory, getOrders, getRevenue } from "../../API";
@@ -38,56 +38,54 @@ function Dashboard() {
   const [inventory, setInventory] = useState(0);
   const [customers, setCustomers] = useState(0);
   const [revenue, setRevenue] = useState(0);
-  const [statistical, setStatistical] = useState(2)
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
-
+  const [statistical, setStatistical] = useState(2);
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/user",{
+      .get("http://localhost:8000/user", {
         headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
+          Authorization: "Bearer " + accessToken,
+        },
       })
       .then((response) => setCustomers(response.data.countUser))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
     axios
-      .get("http://localhost:8000/admin/order/all",{
+      .get("http://localhost:8000/admin/order/all", {
         headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
+          Authorization: "Bearer " + accessToken,
+        },
       })
       .then((response) => setOrders(response.data.orders.length))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
     axios
-      .get("http://localhost:8000/product",{
+      .get("http://localhost:8000/product", {
         headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
+          Authorization: "Bearer " + accessToken,
+        },
       })
       .then((response) => setInventory(response.data.products.length))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
     axios
-      .get("http://localhost:8000/admin/order-year?year=2023",{
+      .get("http://localhost:8000/admin/order-year?year=2023", {
         headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
+          Authorization: "Bearer " + accessToken,
+        },
       })
       .then((response) => setRevenue(response.data.sumTotal))
       .catch((error) => console.error("Error:", error));
   }, []);
 
-
   return (
     <Space size={30} direction="vertical">
       <Typography.Title level={4}>Dashboard</Typography.Title>
-      <Space size={80}direction="horizontal">
+      <Space size={80} direction="horizontal">
         <DashboardCard
           icon={
             <ShoppingCartOutlined
@@ -148,27 +146,30 @@ function Dashboard() {
           title={"Revenue (VND)"}
           value={revenue}
         />
-      </Space >
+      </Space>
       <Space>
         <h3>Thống kê: </h3>
-      <Radio.Group value={statistical} onChange={(e) => setStatistical(e.target.value)}>
-        <Radio.Button value="1">Yearly</Radio.Button>
-        <Radio.Button value="2">Monthly</Radio.Button>
-        <Radio.Button value="3">Daily</Radio.Button>
-      </Radio.Group>
+        <Radio.Group
+          value={statistical}
+          onChange={(e) => setStatistical(e.target.value)}
+        >
+          <Radio.Button value="1">Yearly</Radio.Button>
+          <Radio.Button value="2">Monthly</Radio.Button>
+          <Radio.Button value="3">Daily</Radio.Button>
+        </Radio.Group>
       </Space>
       <Space size={100} direction="horizontal">
-      {statistical == 2 ? <DashboardChart /> : null}
-      {statistical == 2 ? <RevenueChart/> : null}
-      {statistical == 1 ? <YearlyOrderChart/> : null}
-      {statistical == 1 ? <YearlyRevenueChart/> : null}
-      {statistical == 3 ? <DailyOrderChart/> : null}
-      {statistical == 3 ? <DailyRevenueChart/> : null}
+        {statistical == 2 ? <DashboardChart /> : null}
+        {statistical == 2 ? <RevenueChart /> : null}
+        {statistical == 1 ? <YearlyOrderChart /> : null}
+        {statistical == 1 ? <YearlyRevenueChart /> : null}
+        {statistical == 3 ? <DailyOrderChart /> : null}
+        {statistical == 3 ? <DailyRevenueChart /> : null}
       </Space>
       <Space size={100} direction="horizontal">
-        {statistical == 3 ? <DailyUserChart/> : null}     
-        {statistical == 1 ? <YearlyUserChart/> : null}        
-        {statistical == 2 ? <MonthlyUserChart/> : null}
+        {statistical == 3 ? <DailyUserChart /> : null}
+        {statistical == 1 ? <YearlyUserChart /> : null}
+        {statistical == 2 ? <MonthlyUserChart /> : null}
         <RecentOrders />
       </Space>
     </Space>
@@ -188,7 +189,7 @@ function DashboardCard({ title, value, icon }) {
 function RecentOrders() {
   const [orders, setOrders] = useState([]);
   const toast = useToast();
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const transformData = (data) => {
     return data.map((item) => {
@@ -201,10 +202,10 @@ function RecentOrders() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/admin/order-today`,{
+      .get(`http://localhost:8000/admin/order-today`, {
         headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
+          Authorization: "Bearer " + accessToken,
+        },
       })
       .then((response) => setOrders(response.data.orderToday))
       .catch((error) => console.error("Error:", error));
@@ -332,7 +333,7 @@ function RecentOrders() {
 }
 
 function DashboardChart() {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
@@ -350,22 +351,26 @@ function DashboardChart() {
   useEffect(() => {
     const fetchData = async () => {
       const months = Array.from({ length: 12 }, (_, index) => index + 1);
-      const chartData = { labels: [],     datasets: [
-        {
-          label: "Orders",
-          data: [],
-          backgroundColor: "rgba(0, 255, 77, 0.6)",
-          borderColor: "rgba(75,192,192,1)",
-          borderWidth: 1,
-        },
-      ] };
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "Orders",
+            data: [],
+            backgroundColor: "rgba(0, 255, 77, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const month of months) {
         const response = await fetch(
-          `http://localhost:8000/admin/order-month?month=${month}`,{
+          `http://localhost:8000/admin/order-month?month=${month}`,
+          {
             headers: {
-              Authorization: 'Bearer ' + accessToken
-            }
+              Authorization: "Bearer " + accessToken,
+            },
           }
         );
         const result = await response.json();
@@ -381,15 +386,14 @@ function DashboardChart() {
 
   return (
     <div>
-      <h2 style={{width:'450px'}}>Biểu Đồ Số Lượng Đơn Hàng Theo Tháng</h2>
+      <h2 style={{ width: "450px" }}>Biểu Đồ Số Lượng Đơn Hàng Theo Tháng</h2>
       <Bar data={data} />
     </div>
   );
 }
 
-
 const RevenueChart = () => {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
@@ -407,22 +411,26 @@ const RevenueChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       const months = Array.from({ length: 12 }, (_, index) => index + 1);
-      const chartData = { labels: [],     datasets: [
-        {
-          label: "Revenue",
-          data: [],
-          backgroundColor: "rgba(255, 0, 0, 0.6)",
-          borderColor: "rgba(75,192,192,1)",
-          borderWidth: 1,
-        },
-      ] };
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "Revenue",
+            data: [],
+            backgroundColor: "rgba(255, 0, 0, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const month of months) {
         const response = await fetch(
-          `http://localhost:8000/admin/order-month?month=${month}`,{
+          `http://localhost:8000/admin/order-month?month=${month}`,
+          {
             headers: {
-              Authorization: 'Bearer ' + accessToken
-            }
+              Authorization: "Bearer " + accessToken,
+            },
           }
         );
         const result = await response.json();
@@ -438,50 +446,59 @@ const RevenueChart = () => {
 
   return (
     <div>
-      <h2 style={{width:'450px'}}>Biểu Đồ Doanh Thu Theo Tháng</h2>
+      <h2 style={{ width: "450px" }}>Biểu Đồ Doanh Thu Theo Tháng</h2>
       <Bar data={data} />
     </div>
   );
 };
 
 const YearlyRevenueChart = () => {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
     datasets: [
       {
-        label: 'Revenue',
+        label: "Revenue",
         data: [],
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
         borderWidth: 1,
       },
     ],
   });
 
   useEffect(() => {
-    const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+    const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
     const fetchData = async () => {
       const currentYear = new Date().getFullYear();
-      const years = Array.from({ length: 4 }, (_, index) => currentYear - index);
-      const chartData = { labels: [], datasets: [
-        {
-          label: 'Revenue',
-          data: [],
-          backgroundColor: 'rgba(255, 0, 0, 0.6)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderWidth: 1,
-        },
-      ] };
+      const years = Array.from(
+        { length: 4 },
+        (_, index) => currentYear - index
+      );
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "Revenue",
+            data: [],
+            backgroundColor: "rgba(255, 0, 0, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const year of years) {
-        const response = await fetch(`http://localhost:8000/admin/order-year?year=${year}`,{
-          headers: {
-            Authorization: 'Bearer ' + accessToken
+        const response = await fetch(
+          `http://localhost:8000/admin/order-year?year=${year}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
           }
-        });
+        );
         const result = await response.json();
         chartData.labels.push(`Năm ${year}`);
         chartData.datasets[0].data.push(result.sumTotal || 0);
@@ -495,22 +512,22 @@ const YearlyRevenueChart = () => {
 
   return (
     <div>
-      <h2 style={{width:'450px'}}>Biểu Đồ Doanh Thu Theo Năm</h2>
+      <h2 style={{ width: "450px" }}>Biểu Đồ Doanh Thu Theo Năm</h2>
       <Bar data={data} />
     </div>
   );
 };
 const YearlyOrderChart = () => {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
     datasets: [
       {
-        label: 'Orders',
+        label: "Orders",
         data: [],
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
         borderWidth: 1,
       },
     ],
@@ -519,23 +536,32 @@ const YearlyOrderChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       const currentYear = new Date().getFullYear();
-      const years = Array.from({ length: 4 }, (_, index) => currentYear - index);
-      const chartData = { labels: [], datasets: [
-        {
-          label: 'Orders',
-          data: [],
-          backgroundColor: 'rgba(0, 255, 77, 0.6)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderWidth: 1,
-        },
-      ] };
+      const years = Array.from(
+        { length: 4 },
+        (_, index) => currentYear - index
+      );
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "Orders",
+            data: [],
+            backgroundColor: "rgba(0, 255, 77, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const year of years) {
-        const response = await fetch(`http://localhost:8000/admin/order-year?year=${year}`,{
-          headers: {
-            Authorization: 'Bearer ' + accessToken
+        const response = await fetch(
+          `http://localhost:8000/admin/order-year?year=${year}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
           }
-        });
+        );
         const result = await response.json();
         chartData.labels.push(`Năm ${year}`);
         chartData.datasets[0].data.push(result.countOrderYear || 0);
@@ -549,22 +575,22 @@ const YearlyOrderChart = () => {
 
   return (
     <div>
-      <h2 style={{width:'450px'}}>Biểu Đồ Số Lượng Đơn Hàng Theo Năm</h2>
+      <h2 style={{ width: "450px" }}>Biểu Đồ Số Lượng Đơn Hàng Theo Năm</h2>
       <Bar data={data} />
     </div>
   );
 };
 const DailyRevenueChart = () => {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
     datasets: [
       {
-        label: 'Doanh Thu',
+        label: "Doanh Thu",
         data: [],
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
         borderWidth: 1,
       },
     ],
@@ -575,22 +601,28 @@ const DailyRevenueChart = () => {
       const today = new Date();
       const currentDay = today.getDate(); // Lấy ngày hiện tại
       const days = Array.from({ length: 7 }, (_, index) => currentDay - index);
-      const chartData = { labels: [], datasets: [
-        {
-          label: 'Revenue',
-          data: [],
-          backgroundColor: 'rgba(255, 0, 0, 0.6)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderWidth: 1,
-        },
-      ] };
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "Revenue",
+            data: [],
+            backgroundColor: "rgba(255, 0, 0, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const day of days) {
-        const response = await fetch(`http://localhost:8000/admin/order-day?day=${day}`,{
-          headers: {
-            Authorization: 'Bearer ' + accessToken
+        const response = await fetch(
+          `http://localhost:8000/admin/order-day?day=${day}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
           }
-        });
+        );
         const result = await response.json();
         chartData.labels.push(`Ngày ${day}`);
         chartData.datasets[0].data.push(result.sumTotal || 0);
@@ -604,22 +636,22 @@ const DailyRevenueChart = () => {
 
   return (
     <div>
-      <h2 style={{width:'450px'}}>Biểu Đồ Doanh Thu Theo Ngày</h2>
+      <h2 style={{ width: "450px" }}>Biểu Đồ Doanh Thu Theo Ngày</h2>
       <Bar data={data} />
     </div>
   );
 };
 const DailyOrderChart = () => {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
     datasets: [
       {
-        label: 'Order',
+        label: "Order",
         data: [],
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
         borderWidth: 1,
       },
     ],
@@ -630,22 +662,28 @@ const DailyOrderChart = () => {
       const today = new Date();
       const currentDay = today.getDate(); // Lấy ngày hiện tại
       const days = Array.from({ length: 7 }, (_, index) => currentDay - index);
-      const chartData = { labels: [], datasets: [
-        {
-          label: 'Order',
-          data: [],
-          backgroundColor: 'rgba(0, 255, 77, 0.6)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderWidth: 1,
-        },
-      ] };
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "Order",
+            data: [],
+            backgroundColor: "rgba(0, 255, 77, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const day of days) {
-        const response = await fetch(`http://localhost:8000/admin/order-day?day=${day}`,{
-          headers: {
-            Authorization: 'Bearer ' + accessToken
+        const response = await fetch(
+          `http://localhost:8000/admin/order-day?day=${day}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
           }
-        });
+        );
         const result = await response.json();
         chartData.labels.push(`Ngày ${day}`);
         chartData.datasets[0].data.push(result.countOrderToday || 0);
@@ -659,22 +697,22 @@ const DailyOrderChart = () => {
 
   return (
     <div>
-      <h2  style={{width:'450px'}}>Biểu Đồ Số Lượng Đơn Hàng Theo Ngày</h2>
+      <h2 style={{ width: "450px" }}>Biểu Đồ Số Lượng Đơn Hàng Theo Ngày</h2>
       <Bar data={data} />
     </div>
   );
 };
 const DailyUserChart = () => {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
     datasets: [
       {
-        label: 'Order',
+        label: "Order",
         data: [],
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
         borderWidth: 1,
       },
     ],
@@ -685,22 +723,28 @@ const DailyUserChart = () => {
       const today = new Date();
       const currentDay = today.getDate(); // Lấy ngày hiện tại
       const days = Array.from({ length: 7 }, (_, index) => currentDay - index);
-      const chartData = { labels: [], datasets: [
-        {
-          label: 'User',
-          data: [],
-          backgroundColor: 'rgba(0, 255, 255, 0.6)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderWidth: 1,
-        },
-      ] };
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "User",
+            data: [],
+            backgroundColor: "rgba(0, 255, 255, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const day of days) {
-        const response = await fetch(`http://localhost:8000/admin/user-day?day=${day}`,{
-          headers: {
-            Authorization: 'Bearer ' + accessToken
+        const response = await fetch(
+          `http://localhost:8000/admin/user-day?day=${day}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
           }
-        });
+        );
         const result = await response.json();
         chartData.labels.push(`Ngày ${day}`);
         chartData.datasets[0].data.push(result.countNewUsersDay || 0);
@@ -714,22 +758,22 @@ const DailyUserChart = () => {
 
   return (
     <div>
-      <h2  style={{width:'450px'}}>Người Dùng Mới Theo Ngày</h2>
+      <h2 style={{ width: "450px" }}>Người Dùng Mới Theo Ngày</h2>
       <Bar data={data} />
     </div>
   );
 };
 const YearlyUserChart = () => {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
     datasets: [
       {
-        label: 'User',
+        label: "User",
         data: [],
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
         borderWidth: 1,
       },
     ],
@@ -738,23 +782,32 @@ const YearlyUserChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       const currentYear = new Date().getFullYear();
-      const years = Array.from({ length: 4 }, (_, index) => currentYear - index);
-      const chartData = { labels: [], datasets: [
-        {
-          label: 'User',
-          data: [],
-          backgroundColor: 'rgba(0, 255, 255, 0.6)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderWidth: 1,
-        },
-      ] };
+      const years = Array.from(
+        { length: 4 },
+        (_, index) => currentYear - index
+      );
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "User",
+            data: [],
+            backgroundColor: "rgba(0, 255, 255, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const year of years) {
-        const response = await fetch(`http://localhost:8000/admin/user-year?year=${year}`,{
-          headers: {
-            Authorization: 'Bearer ' + accessToken
+        const response = await fetch(
+          `http://localhost:8000/admin/user-year?year=${year}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
           }
-        });
+        );
         const result = await response.json();
         chartData.labels.push(`Năm ${year}`);
         chartData.datasets[0].data.push(result.countNewUsersDay || 0);
@@ -768,14 +821,14 @@ const YearlyUserChart = () => {
 
   return (
     <div>
-      <h2 style={{width:'450px'}}>Người Dùng Mới Theo Năm</h2>
+      <h2 style={{ width: "450px" }}>Người Dùng Mới Theo Năm</h2>
       <Bar data={data} />
     </div>
   );
 };
 
 const MonthlyUserChart = () => {
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const [data, setData] = useState({
     labels: [],
@@ -793,22 +846,26 @@ const MonthlyUserChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       const months = Array.from({ length: 12 }, (_, index) => index + 1);
-      const chartData = { labels: [],     datasets: [
-        {
-          label: "User",
-          data: [],
-          backgroundColor: "rgba(0, 255, 255, 0.6)",
-          borderColor: "rgba(75,192,192,1)",
-          borderWidth: 1,
-        },
-      ] };
+      const chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "User",
+            data: [],
+            backgroundColor: "rgba(0, 255, 255, 0.6)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1,
+          },
+        ],
+      };
 
       for (const month of months) {
         const response = await fetch(
-          `http://localhost:8000/admin/user-month?month=${month}`,{
+          `http://localhost:8000/admin/user-month?month=${month}`,
+          {
             headers: {
-              Authorization: 'Bearer ' + accessToken
-            }
+              Authorization: "Bearer " + accessToken,
+            },
           }
         );
         const result = await response.json();
@@ -824,7 +881,7 @@ const MonthlyUserChart = () => {
 
   return (
     <div>
-      <h2 style={{width:'450px'}}>Ngừoi Dùng Mới Theo Tháng</h2>
+      <h2 style={{ width: "450px" }}>Ngừoi Dùng Mới Theo Tháng</h2>
       <Bar data={data} />
     </div>
   );

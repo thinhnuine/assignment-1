@@ -85,12 +85,21 @@ const Admin = () => {
             background: colorBgContainer,
           }}
         >
-          <div style={{display: 'flex',justifyContent:'flex-end', marginRight:'20px'}}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginRight: "20px",
+            }}
+          >
             <div>
-
-          <Avatar style={{marginRight: "12px"}}size="large" icon={<UserOutlined />} />
+              <Avatar
+                style={{ marginRight: "12px" }}
+                size="large"
+                icon={<UserOutlined />}
+              />
             </div>
-          <AdminName/>
+            <AdminName />
           </div>
         </Header>
         <Content

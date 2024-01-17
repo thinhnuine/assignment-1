@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Space, Table, Button, Popconfirm ,Form,Select,Input} from "antd";
+import { Space, Table, Button, Popconfirm, Form, Select, Input } from "antd";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import {} from "../../services";
 const { Option } = Select;
 
-
 const OrderAdmin = () => {
   const [orders, setOrders] = useState([]);
   const toast = useToast();
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [number,setNumber]= useState()
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
-
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [number, setNumber] = useState();
+  const { id, accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const transformData = (data) => {
     return data.map((item) => {
@@ -22,40 +20,39 @@ const OrderAdmin = () => {
       };
     });
   };
-// const transformedOrders = transformData(orders);
+  // const transformedOrders = transformData(orders);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/admin/order/all`,{
+      .get(`http://localhost:8000/admin/order/all`, {
         headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
+          Authorization: "Bearer " + accessToken,
+        },
       })
       .then((response) => setOrders(response.data.orders))
       .catch((error) => console.error("Error:", error));
   }, []);
 
-  
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/admin${selectedCategory}${number}`,{
+      .get(`http://localhost:8000/admin${selectedCategory}${number}`, {
         headers: {
-          Authorization: 'Bearer ' + accessToken
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+      .then((response) => {
+        if (selectedCategory === "/order-day?day=") {
+          setOrders(response.data.orderToday);
+        } else if (selectedCategory === "/order-month?month=") {
+          setOrders(response.data.orderMonth);
+        } else if (selectedCategory === "/order-year?year=") {
+          setOrders(response.data.orderYear);
+        } else {
+          setOrders(response.data.order);
         }
       })
-      .then((response) => {if(selectedCategory==="/order-day?day="){
-        setOrders(response.data.orderToday)
-      } else if(selectedCategory==="/order-month?month="){
-        setOrders(response.data.orderMonth)
-      } else if(selectedCategory==="/order-year?year="){
-        setOrders(response.data.orderYear)
-      } else {
-        setOrders(response.data.order)
-      }
-        })
       .catch((error) => console.error("Error:", error));
   }, [selectedCategory]);
-
 
   const deleteUser = async (id) => {
     try {
@@ -80,7 +77,7 @@ const OrderAdmin = () => {
         title: "Image",
         dataIndex: "variant",
         key: "variant",
-        render: (_,variants) => (
+        render: (_, variants) => (
           <>
             <img
               width={40}
@@ -136,7 +133,7 @@ const OrderAdmin = () => {
       title: "Customer",
       dataIndex: "orderedBy",
       key: "orderedBy",
-      render: (_,record) => <a>{record.orderedBy.email}</a>,
+      render: (_, record) => <a>{record.orderedBy.email}</a>,
     },
     {
       title: "Pay",
@@ -173,49 +170,42 @@ const OrderAdmin = () => {
   ];
 
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    console.log("Received values of form: ", values);
     setSelectedCategory(values.timeSet.category);
-    setNumber(values.timeSet.number)
+    setNumber(values.timeSet.number);
   };
 
-  console.log(orders)
+  console.log(orders);
 
   return (
     <>
-    <Form onFinish={onFinish}>
-
-      <Form.Item label="Filter by">
-        <Space.Compact>
-          <Form.Item
-            name={["timeSet", "category"]}
-            noStyle
-          >
-            <Select placeholder="Select one" >
-              <Option value="">All</Option>
-              <Option value="/order-day?day=">Day</Option>
-              <Option value="/order-month?month=">Month</Option>
-              <Option value="/order-year?year=">Year</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name={["timeSet", "number"]}
-            noStyle
-          >
-            <Input
-              style={{
-                width: "50%",
-              }}
-              placeholder="Input"
-            />
-          </Form.Item>
-        </Space.Compact>
-      </Form.Item>
-      <Form.Item label=" " colon={false}>
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
-    </Form.Item>
-    </Form>
+      <Form onFinish={onFinish}>
+        <Form.Item label="Filter by">
+          <Space.Compact>
+            <Form.Item name={["timeSet", "category"]} noStyle>
+              <Select placeholder="Select one">
+                <Option value="">All</Option>
+                <Option value="/order-day?day=">Day</Option>
+                <Option value="/order-month?month=">Month</Option>
+                <Option value="/order-year?year=">Year</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item name={["timeSet", "number"]} noStyle>
+              <Input
+                style={{
+                  width: "50%",
+                }}
+                placeholder="Input"
+              />
+            </Form.Item>
+          </Space.Compact>
+        </Form.Item>
+        <Form.Item label=" " colon={false}>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
       {orders && (
         <Table
           columns={columns}

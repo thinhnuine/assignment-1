@@ -9,7 +9,7 @@ const EditVariant = (id) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const toast = useToast();
-  const { accessToken } = JSON.parse(localStorage.getItem("user"));
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   console.log(id.id);
   const showModal = () => {
@@ -33,7 +33,10 @@ const EditVariant = (id) => {
       form.setFieldValue("name", variant.data.variant.name);
       form.setFieldValue("image", variant.data.variant.image);
       form.setFieldValue("price", variant.data.variant.priceDetail.price);
-      form.setFieldValue("saleRatio", variant.data.variant.priceDetail.saleRatio);
+      form.setFieldValue(
+        "saleRatio",
+        variant.data.variant.priceDetail.saleRatio
+      );
       form.setFieldValue("color", variant.data.variant.color);
       form.setFieldValue("size", variant.data.variant.size);
       form.setFieldValue("countInStock", variant.data.variant.countInStock);

@@ -8,7 +8,7 @@ const CreateProduct = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const toast = useToast();
-  const {id, accessToken} = JSON.parse(localStorage.getItem("user"))
+  const { id, accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const showModal = () => {
     setOpen(true);
@@ -26,24 +26,27 @@ const CreateProduct = () => {
   };
 
   const onFinish = async (values) => {
-
     try {
-      const result = await axios.post(`http://localhost:8000/admin/product/${values.category}`, {
-        name: values.name,
-        slug: values.slug,
-        detailProduct: {
+      const result = await axios.post(
+        `http://localhost:8000/admin/product/${values.category}`,
+        {
+          name: values.name,
+          slug: values.slug,
+          detailProduct: {
             material: values.material,
             form: values.form,
             color: values.color,
             design: values.design,
             image: values.image,
           },
-          thumbnail: values.thumbnail
-      },{
-        headers: {
-          Authorization: 'Bearer ' + accessToken
+          thumbnail: values.thumbnail,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
         }
-      });
+      );
       toast({
         status: "success",
         title: "Tạo sản phẩm thành công",
@@ -71,12 +74,19 @@ const CreateProduct = () => {
         onCancel={handleCancel}
         width={700}
         footer={[
-            <Button key="back" onClick={handleCancel}>
-              Cancel
-            </Button>,
-            <Button key="submit" form="myForm" type="primary" htmlType="submit"  onClick={handleOk}>
-              Submit
-            </Button>]}
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            form="myForm"
+            type="primary"
+            htmlType="submit"
+            onClick={handleOk}
+          >
+            Submit
+          </Button>,
+        ]}
       >
         <Form
           labelCol={{

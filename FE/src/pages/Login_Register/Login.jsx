@@ -1,3 +1,4 @@
+import { Button, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -7,18 +8,18 @@ const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    fetch("https://6485ce2fa795d24810b75652.mockapi.io/api/v1/array-user")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
+  // useEffect(() => {
+  //   fetch("https://6485ce2fa795d24810b75652.mockapi.io/api/v1/array-user")
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       console.log(data);
 
-        // setUser(data);
-        setData(data);
-      });
-  }, []);
+  //       // setUser(data);
+  //       setData(data);
+  //     });
+  // }, []);
 
   const handleLogin = () => {
     const response = fetch("http://localhost:8000/admin/login", {
@@ -38,12 +39,11 @@ const Login = () => {
       res.json().then((data) => {
         if (data.email === userName) {
           localStorage.setItem("user/admin", JSON.stringify(data));
-          // setHandleModal(!handleModal)
 
-          alert("Đăng nhập thành công!");
+          message.success("Đăng nhập thành công!");
           navigate("/admin");
         } else {
-          alert("Tài khoản của bạn không phải admin");
+          message.error("Tài khoản của bạn không phải admin");
         }
       })
     );
@@ -51,11 +51,10 @@ const Login = () => {
 
   return (
     <div>
-      <div className="login">
-        <h1>Đăng nhậpaaa</h1>
-        <p>Vui lòng nhập thông tin tài khoản</p>
-        <hr />
-        <label htmlFor="username">
+      <div className="login container mt-20 max-w-[700px]">
+        <h1 className="text-xl font-bold">Đăng nhập</h1>
+        <hr className="mt-4" />
+        <label htmlFor="username" className="mt-3">
           <b>Tên đăng nhập</b>
         </label>
         <input
@@ -98,9 +97,15 @@ const Login = () => {
         />
 
         <hr />
-        <button onClick={handleLogin} type="submit" className="submit">
+        <Button
+          onClick={handleLogin}
+          htmlType="submit"
+          size="large"
+          className="bg-green-500 mt-2 w-full"
+          type="primary"
+        >
           Đăng nhập
-        </button>
+        </Button>
       </div>
     </div>
   );

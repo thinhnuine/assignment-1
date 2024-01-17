@@ -8,7 +8,7 @@ const CreateVariant = (id) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const toast = useToast();
-  const { accessToken } = JSON.parse(localStorage.getItem("user"));
+  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const showModal = () => {
     setOpen(true);
@@ -112,19 +112,27 @@ const CreateVariant = (id) => {
           <Form.Item label="Image" name="image" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Price" name="price"rules={[{ required: true }]}>
+          <Form.Item label="Price" name="price" rules={[{ required: true }]}>
             <InputNumber />
           </Form.Item>
-          <Form.Item label="Sale Ratio" name="saleRatio"rules={[{ required: true }]}>
+          <Form.Item
+            label="Sale Ratio"
+            name="saleRatio"
+            rules={[{ required: true }]}
+          >
             <InputNumber />
           </Form.Item>
-          <Form.Item label="Color" name="color"rules={[{ required: true }]}>
+          <Form.Item label="Color" name="color" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Size" name="size"rules={[{ required: true }]}>
+          <Form.Item label="Size" name="size" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Count In Stock" name="countInStock"rules={[{ required: true }]}>
+          <Form.Item
+            label="Count In Stock"
+            name="countInStock"
+            rules={[{ required: true }]}
+          >
             <InputNumber />
           </Form.Item>
         </Form>
