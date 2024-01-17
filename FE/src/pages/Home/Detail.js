@@ -9,10 +9,9 @@ import { useParams } from "react-router-dom";
 import Headers from "./Header";
 import Footer from "./Footer";
 
-
 const Detail = () => {
   const [productById, setProductById] = useState();
-  const {id} = useParams();
+  const { id } = useParams();
   console.log(id);
 
   useEffect(() => {
@@ -24,8 +23,8 @@ const Detail = () => {
 
   return (
     <>
-    <Headers />
-      <div className="pro-details">
+      <Headers />
+      <div className="container flex flex-col lg:flex-row items-start ">
         {productById && <SlideImg productById={productById} />}
         {productById && <DetailsInfo productById={productById} />}
       </div>

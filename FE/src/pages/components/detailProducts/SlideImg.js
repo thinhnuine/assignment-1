@@ -2,6 +2,7 @@ import React from "react";
 import { Slide } from "react-slideshow-image";
 import "./SlideImg.css";
 import { Image } from "antd";
+import "react-slideshow-image/dist/styles.css";
 
 const proprietes = {
   duration: 5000,
@@ -21,20 +22,21 @@ const SlideImg = (data) => {
     return false;
   });
 
-  console.log(filteredVariants)
+  console.log(filteredVariants);
 
   return (
-    <div className="containerSlide">
+    <div className="container xl:w-[700px]">
       <Slide {...proprietes}>
-        {filteredVariants && filteredVariants.map((variants, index) => (
-          <div key={index} className="each-slide">
-            <div>
-              <Image.PreviewGroup items={filteredVariants.image}>
-                <Image src={variants.image} />
-              </Image.PreviewGroup>
+        {filteredVariants &&
+          filteredVariants.map((variants, index) => (
+            <div key={index} className="each-slide">
+              <div>
+                <Image.PreviewGroup items={filteredVariants.image}>
+                  <Image src={variants.image} />
+                </Image.PreviewGroup>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </Slide>
     </div>
   );

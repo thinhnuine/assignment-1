@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./DetailsInfo.css";
 import CartSidebar from "./CartSidebar";
-import { List } from "antd";
+import { Button, List, message } from "antd";
 import { updateCart } from "../../services";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
@@ -46,9 +46,9 @@ const DetailsInfo = (data) => {
   const handleClick = () => {
     const isAuthenticated = !!localStorage.getItem("user");
     if (!isAuthenticated) {
-      return alert('Bạn phải đăng nhập trước')
+      return alert("Bạn phải đăng nhập trước");
     }
-    const accessToken = JSON.parse(localStorage.getItem("user")).accessToken
+    const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
     const addToCart = async () => {
       try {
         const response = await axios.put(
@@ -79,7 +79,7 @@ const DetailsInfo = (data) => {
       console.log({ variant: selectedVariant._id, quantity: quantity });
       addToCart();
     } else {
-      console.error("Chưa chọn color, size");
+      message.error("Chưa chọn color, size");
     }
   };
 
@@ -137,12 +137,13 @@ const DetailsInfo = (data) => {
   };
 
   return (
-    <div className="detailContainer">
-      <h2 className="productName">{data.productById.name}</h2>
-      <hr></hr>
-      <div className="price">
-        <h1 className="afterSale-price">{formatNumber(salePrice)}đ</h1>
-        <h2 className="original-price">
+    <div className="mt-4">
+      <h2 className="text-lg">{data.productById.name}</h2>
+      <div className="flex mt-1">
+        <h1 className="text-[#f81f1f] text-base mr-3">
+          {formatNumber(salePrice)}đ
+        </h1>
+        <h2 className="line-through text-gray-400 text-base">
           {formatNumber(data.productById.priceDetail.price)}đ
         </h2>
       </div>
@@ -196,9 +197,14 @@ const DetailsInfo = (data) => {
         </button>
         <p>Còn hàng</p>
       </div>
-      <button className="addToCart-btn" type="submit" onClick={handleClick}>
+      <Button
+        className="bg-black text-white mt-3"
+        size="large"
+        type="submit"
+        onClick={handleClick}
+      >
         THÊM VÀO GIỎ
-      </button>
+      </Button>
     </div>
   );
 };

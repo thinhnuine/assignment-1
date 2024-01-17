@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./Home.css";
 import { Link, useNavigate } from "react-router-dom";
-// import Modal from "../Modal";
 import { useUser } from "../../UserContext";
-import { Badge, Button, Divider, Drawer, Input, Modal, Space } from "antd";
+import { Badge, Button, Divider, Drawer, Modal, message } from "antd";
 import { ShoppingCartOutlined, MenuOutlined } from "@ant-design/icons";
-const { Search } = Input;
 const Header = () => {
   const navigate = new useNavigate();
 
@@ -29,7 +27,7 @@ const Header = () => {
 
   const { updateUser } = useUser();
   const handleLogin = async () => {
-    const response = await fetch("http://localhost:8000/user/login", {
+    await fetch("http://localhost:8000/user/login", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -45,11 +43,14 @@ const Header = () => {
       res.json().then((data) => {
         if (data.email === userName) {
           localStorage.setItem("user", JSON.stringify(data));
+          localStorage.setItem("refreshToken", data.refreshToken);
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("id", data.id);
           setHandleModal(!handleModal);
           navigate("/");
-          alert("Đăng nhập thành công!");
+          message.success("Đăng nhập thành công!");
         } else {
-          alert("Tài khoản hoặc mật khẩu sai!");
+          message.error("Tài khoản hoặc mật khẩu sai!");
         }
       })
     );
@@ -138,7 +139,9 @@ const Header = () => {
                 )}
               </ul>
               <Badge count={5}>
-                <ShoppingCartOutlined className="text-[40px] ml-5 text-red-500 cursor-pointer" />
+                <Link href="/cart">
+                  <ShoppingCartOutlined className="text-[40px] ml-5 text-red-500 cursor-pointer" />
+                </Link>
               </Badge>
             </div>
           </div>
@@ -161,7 +164,9 @@ const Header = () => {
                   <i className="fa-solid fa-magnifying-glass" />
                 </div>
                 <Badge count={5}>
-                  <ShoppingCartOutlined className="text-[30px]  text-red-500 cursor-pointer" />
+                  <Link href="/cart">
+                    <ShoppingCartOutlined className="text-[30px]  text-red-500 cursor-pointer" />
+                  </Link>
                 </Badge>
               </div>
             </div>
