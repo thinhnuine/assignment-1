@@ -2,13 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Futura";
+  src: url(public/futura-400.ttf) format('truetype');
+  font-weight: 400
+}
+
+@font-face {
+  font-family: "Futura";
+  src: url(public/futura-700.ttf) format('truetype');
+  font-weight: 700
+}
+
+@layer base {
+  html {
+    font-family: 'Futura', sans-serif;
+  }
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: 'Futura', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #333333;
 }
 
 code {

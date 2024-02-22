@@ -4,9 +4,52 @@ import "react-multi-carousel/lib/styles.css";
 import Product from "./Product";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { message } from "antd";
+import { useUser } from "../../../UserContext";
 
 export default function SimilarProducts() {
+  const { updateUser } = useUser()
+
   const [productData, setProductData] = useState([]);
+
+  const handleAddToCart = (productItem) => {
+    const isAuthenticated = !!localStorage.getItem("user");
+    if (!isAuthenticated) {
+      return alert("Bạn phải đăng nhập trước");
+    }
+    const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
+    const addToCart = async () => {
+      const variantId = productItem.variants[0]._id
+      try {
+        const response = await axios.put(
+          "http://localhost:8000/user/cart",
+          {
+            variant: variantId,
+            quantity: 1,
+            action: 'addToCart'
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
+          }
+        );
+        console.log(response);
+        if (response.data.success) {
+          // Xử lý sau khi thêm vào giỏ hàng thành công (nếu cần)
+          message.success("Thêm vào giỏ hàng thành công")
+        } else {
+          console.error("Có lỗi khi thêm vào giỏ hàng:", response.message);
+        }
+      } catch (error) {
+        console.error("Lỗi khi gọi API addVariantToCart:", error.message);
+      }
+      updateUser();
+    };
+
+    addToCart();
+
+  };
 
   useEffect(() => {
     axios
@@ -14,6 +57,7 @@ export default function SimilarProducts() {
       .then((response) => setProductData(response.data.products))
       .catch((error) => console.error("Error:", error));
   }, []);
+
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -40,6 +84,8 @@ export default function SimilarProducts() {
       url={item.thumbnail}
       price={item.detailProduct.material}
       description={item.description}
+      item={item}
+      onAddToCart={handleAddToCart}
     />
   ));
 

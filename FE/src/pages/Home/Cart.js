@@ -1,72 +1,226 @@
-import React from "react";
+import React, { useState } from "react";
 import Headers from "./Header";
 import Footer from "./Footer";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { Link } from "react-router-dom";
+import { formatCurrencyInVnd } from "../../helper";
+import { useUser } from "../../UserContext";
+import emptyCartSvg from "../../assets/images/cart_empty.svg";
+import axios from "axios";
+import CartDropdown from "./CartDropdown";
 
 export default function Cart() {
+  const { user, updateUser } = useUser();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const cartDetails = user?.cart?.cartDetail || [];
+  const totalPrice = user?.cart?.totalPrice || 0;
+
+  const changeQuantity = async (variantId, quantity) => {
+    try {
+      const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
+      setIsLoading(true);
+      const response = await axios.put(
+        "http://localhost:8000/user/cart",
+        {
+          variant: variantId,
+          quantity,
+          action: "changeQuantity",
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      );
+
+      if (response.data?.success) {
+        updateUser();
+      } else {
+        message.error("Thay đổi số lượng không thành công");
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API addVariantToCart:", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChangeQuantity = (type, cartItem, inputQuantity) => {
+    let newQuantity = cartItem.quantity;
+
+    if (type === "increase") {
+      newQuantity += 1;
+    }
+    if (type === "decrease") {
+      newQuantity -= 1;
+    }
+    if (type === "update") {
+      newQuantity = inputQuantity;
+    }
+
+    changeQuantity(cartItem.variant, newQuantity);
+  };
+
+  const hanelRemoveCartItem = async cartItem => {
+    try {
+      const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
+      setIsLoading(true);
+      const response = await axios.delete(
+        `http://localhost:8000/user/remove-cart/${cartItem.variant}`,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      );
+
+      if (response.data?.success) {
+        updateUser();
+      } else {
+        message.error("Xoá không thành công");
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API addVariantToCart:", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <Headers />
       <section className="min-h-[57vh]">
-        <div class="mb-10 container text-[#333]">
-          <h1 class="text-2xl text-left mt-1">Giỏ hàng của bạn</h1>
-          <div class="flex items-start gap-2.5 mt-3 md:gap-5 ">
-            <img
-              src="https://bizweb.dktcdn.net/thumb/compact/100/415/697/products/ao-thun-mat-truoc.jpg"
-              alt="Áo Thun Teelab Local Brand Teelab Blockcore TS212"
-              className=" w-[79px] xl:w-[144px]"
-            />
-            <div>
-              <Link
-                href="/ao-thun-teelab-phoi-blockcore-den-trang-ts212"
-                title="Áo Thun Teelab Local Brand Teelab
-                Blockcore TS212 Áo"
-                className="text-sm xl:text-base"
-              >
-                Thun Teelab Local Brand Teelab Blockcore TS212
-              </Link>
-              <p className="text-xs text-[#333] mt-1">Đen/M</p>
-              <div class=" flex justify-between mt-1">
-                <div class="flex input-group-btn text-sm">
-                  <button
-                    type="button"
-                    className="rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7"
+        <div className="mb-10 container text-[#333]">
+          <h1 className="text-2xl text-left mt-1">Giỏ hàng của bạn</h1>
+
+          <div className="relative overflow-x-auto mt-2 hidden md:block">
+            {cartDetails.length > 0 ? (
+              <>
+                <table className="w-full text-left">
+                  <thead className="text-base font-bold text-[#333333] bg-white border border-[#ebebeb] ">
+                    <tr className="py-2">
+                      <th scope="col" className="pl-[10px]">
+                        Thông tin sản phẩm
+                      </th>
+                      <th scope="col" className="text-center">
+                        Đơn giá
+                      </th>
+                      <th scope="col" className="text-center">
+                        Số lượng
+                      </th>
+                      <th scope="col" className="text-center">
+                        Thành tiền
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cartDetails.map(cartItem => {
+                      const priceAProduct =
+                        cartItem.priceDetail.price * ((100 - cartItem.priceDetail.saleRatio) / 100);
+
+                      return (
+                        <tr
+                          className="bg-white border border-[#ebebeb] hover:bg-gray-50"
+                          key={cartItem.variant}
+                        >
+                          <th scope="row" className="pl-[10px] py-2">
+                            <div className="d-flex flex-row gap-3">
+                              <img
+                                src={cartItem?.image}
+                                alt={cartItem?.name}
+                                className=" w-[79px] xl:w-[110px]"
+                              />
+                              <div className="d-flex flex-col justify-center gap-2">
+                                <Link
+                                  to={`/detail/${cartItem?.productId}`}
+                                  title={cartItem?.name}
+                                  className="text-sm font-medium text-[#333333]"
+                                >
+                                  {cartItem?.name}
+                                </Link>
+                                <span className="text-xs text-[#333333] font-medium">
+                                  {cartItem?.color} / {cartItem?.size}
+                                </span>
+                                <div className="action-remove">
+                                  <button
+                                    className="font-light text-[#ff0000] text-[13px] inline"
+                                    onClick={() => hanelRemoveCartItem(cartItem)}
+                                  >
+                                    Xoá
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </th>
+                          <td className="text-center py-2 text-[#ff0000] font-bold text-sm">
+                            {formatCurrencyInVnd(priceAProduct)}đ
+                          </td>
+                          <td className="text-center py-2">
+                            <div className="flex justify-center text-sm">
+                              <button
+                                type="button"
+                                className="rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg disabled:bg-[#0000000a] disabled:cursor-not-allowed"
+                                onClick={() => handleChangeQuantity("decrease", cartItem)}
+                                disabled={isLoading || cartItem.quantity === 1}
+                              >
+                                -
+                              </button>
+                              <input
+                                type="text"
+                                className=" rounded-none  border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b disabled:bg-[#0000000a] disabled:cursor-not-allowed"
+                                maxlength="2"
+                                pattern="[0-9]*"
+                                value={cartItem.quantity}
+                                onChange={event =>
+                                  handleChangeQuantity("update", cartItem, event.target.value)
+                                }
+                                disabled={isLoading}
+                              />
+                              <button
+                                className="rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg disabled:bg-[#0000000a] disabled:cursor-not-allowed"
+                                onClick={() => handleChangeQuantity("increase", cartItem)}
+                                disabled={isLoading}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </td>
+                          <td className="text-center py-2 text-[#ff0000] font-bold text-sm">
+                            {formatCurrencyInVnd(priceAProduct * cartItem.quantity)}đ
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                <div className="flex mt-4 justify-between xl:justify-end xl:gap-2 items-center">
+                  <p className="text-base ">Tổng tiền:</p>
+                  <p className="font-bold text-base text-[#ff0000]">
+                    {formatCurrencyInVnd(totalPrice)}đ
+                  </p>
+                </div>
+                <div className="lg:flex lg:justify-end">
+                  <Button
+                    type="primary"
+                    className="bg-black w-full lg:w-[300px] mt-3 !rounded-none"
+                    size="large"
                   >
-                    -
-                  </button>
-                  <input
-                    type="text"
-                    className=" rounded-none  border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b"
-                    maxlength="3"
-                    pattern="[0-9]*"
-                  />
-                  <button className="rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7">
-                    +
-                  </button>
+                    Thanh toán
+                  </Button>
                 </div>
-                <div class="w-1/2 text-right">
-                  <span className="font-bold text-base text-red-500">
-                    199.000đ
-                  </span>
-                  <p className="text-sm cursor-pointer">Xóa</p>
-                </div>
+              </>
+            ) : (
+              <div className="flex flex-col justify-center items-center gap-3">
+                <img src={emptyCartSvg} alt="empty cart" className="w-24 h-24" />
+                <span>Không có sản phẩm nào trong giỏ hàng của bạn</span>
               </div>
-            </div>
+            )}
           </div>
-          <hr className="mt-2" />
-          <div className="flex mt-4 justify-between xl:justify-end xl:gap-2 items-center">
-            <p className="text-base ">Tổng tiền:</p>
-            <p className="font-bold text-base text-red-500">199.000đ</p>
-          </div>
-          <div className="lg:flex lg:justify-end">
-            <Button
-              type="primary"
-              className="bg-black w-full lg:w-[300px] mt-3 !rounded-none"
-              size="large"
-            >
-              Thanh toán
-            </Button>
+
+          <div className="block md:hidden mt-2">
+            <CartDropdown />
           </div>
         </div>
       </section>

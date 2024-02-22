@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
-import "./DetailsInfo.css";
-import CartSidebar from "./CartSidebar";
-import { Button, List, message } from "antd";
-import { updateCart } from "../../services";
-import axios from "axios";
 import { useToast } from "@chakra-ui/react";
+import { Button, message } from "antd";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../../../UserContext";
+import "./DetailsInfo.css";
 
 // const api = axios.create({
 //   baseURL: "http://localhost:8000",
@@ -42,7 +40,9 @@ const DetailsInfo = (data) => {
       setSelectedVariant(variant);
     }
   }, [color, size, data.productById.variants]);
+
   const { updateUser } = useUser();
+
   const handleClick = () => {
     const isAuthenticated = !!localStorage.getItem("user");
     if (!isAuthenticated) {
@@ -56,6 +56,7 @@ const DetailsInfo = (data) => {
           {
             variant: selectedVariant._id,
             quantity,
+            action: 'addToCart'
           },
           {
             headers: {
@@ -66,7 +67,7 @@ const DetailsInfo = (data) => {
         console.log(response);
         if (response.data.success) {
           // Xử lý sau khi thêm vào giỏ hàng thành công (nếu cần)
-          console.log("Đã thêm vào giỏ hàng!");
+          message.success("Thêm vào giỏ hàng thành công")
         } else {
           console.error("Có lỗi khi thêm vào giỏ hàng:", response.message);
         }
@@ -86,7 +87,7 @@ const DetailsInfo = (data) => {
   useEffect(() => {
     setSalePrice(
       data.productById.priceDetail.price *
-        ((100 - data.productById.priceDetail.saleRatio) / 100)
+      ((100 - data.productById.priceDetail.saleRatio) / 100)
     );
     isSoldCheck();
   }, []);
@@ -117,7 +118,7 @@ const DetailsInfo = (data) => {
     return false;
   });
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   const inQuantity = () => {
     if (quantity < 999) {

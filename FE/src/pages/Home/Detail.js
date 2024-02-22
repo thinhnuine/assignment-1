@@ -19,7 +19,7 @@ const Detail = () => {
       .get(`http://localhost:8000/product/${id}`)
       .then((response) => setProductById(response.data.product))
       .catch((error) => console.error("Error:", error));
-  }, []);
+  }, [id]);
 
   return (
     <>

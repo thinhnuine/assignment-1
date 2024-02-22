@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../UserContext";
 import { Badge, Button, Divider, Drawer, Modal, message } from "antd";
 import { ShoppingCartOutlined, MenuOutlined } from "@ant-design/icons";
+import { getQuantityInCart } from "../../helper";
+import CartDropdown from "./CartDropdown";
 const Header = () => {
   const navigate = new useNavigate();
 
@@ -22,10 +24,9 @@ const Header = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {}, []);
-  const setUser = useContext(useUser);
+  const { updateUser, user: userData } = useUser();
+  const totalQuantityInCart = getQuantityInCart(userData?.cart?.cartDetail);
 
-  const { updateUser } = useUser();
   const handleLogin = async () => {
     await fetch("http://localhost:8000/user/login", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -39,8 +40,8 @@ const Header = () => {
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify({ email: userName, password }), // body data type must match "Content-Type" header
-    }).then((res) =>
-      res.json().then((data) => {
+    }).then(res =>
+      res.json().then(data => {
         if (data.email === userName) {
           localStorage.setItem("user", JSON.stringify(data));
           localStorage.setItem("refreshToken", data.refreshToken);
@@ -79,8 +80,8 @@ const Header = () => {
       }), // body data type must match "Content-Type" header
     });
 
-    response.then((res) =>
-      res.json().then((data) => {
+    response.then(res =>
+      res.json().then(data => {
         console.log(data);
         if (checkPasswordRegister != passwordRegister) {
           alert("Mật khẩu không trùng khớp!");
@@ -118,7 +119,7 @@ const Header = () => {
                     <li>
                       <Link to="/profile">
                         <a style={{ color: "black" }}>
-                          <i class="fa-regular fa-user"></i>
+                          <i className="fa-regular fa-user"></i>
                           {` ${name.email.split("@")[0]}`}
                         </a>
                       </Link>{" "}
@@ -138,19 +139,21 @@ const Header = () => {
                   </li>
                 )}
               </ul>
-              <Badge count={5}>
-                <Link href="/cart">
-                  <ShoppingCartOutlined className="text-[40px] ml-5 text-red-500 cursor-pointer" />
+              <div className="cart-nativator relative group">
+                <Link to="/cart">
+                  <Badge count={totalQuantityInCart} showZero>
+                    <ShoppingCartOutlined className="text-[40px] ml-5 text-red-500 cursor-pointer" />
+                  </Badge>
                 </Link>
-              </Badge>
+                <div className="cart-dropdown hidden absolute right-0 z-50 group-hover:block">
+                  <CartDropdown />
+                </div>
+              </div>
             </div>
           </div>
           <div>
             <div className="flex lg:hidden justify-between container">
-              <MenuOutlined
-                className="text-[20px]"
-                onClick={() => setMenuMobile(true)}
-              />
+              <MenuOutlined className="text-[20px]" onClick={() => setMenuMobile(true)} />
 
               <Link to="/">
                 <img
@@ -163,11 +166,11 @@ const Header = () => {
                 <div className="cursor-pointer text-[#999] text-[20px]">
                   <i className="fa-solid fa-magnifying-glass" />
                 </div>
-                <Badge count={5}>
-                  <Link href="/cart">
-                    <ShoppingCartOutlined className="text-[30px]  text-red-500 cursor-pointer" />
-                  </Link>
-                </Badge>
+                <Link to="/cart">
+                  <Badge count={totalQuantityInCart} showZero>
+                    <ShoppingCartOutlined className="text-[30px] text-red-500 cursor-pointer" />
+                  </Badge>
+                </Link>
               </div>
             </div>
           </div>
@@ -303,10 +306,7 @@ const Header = () => {
         {login ? (
           <div>
             <div className="max-w-[500px] mx-auto">
-              <h1
-                className="text-3xl font-bold"
-                style={{ marginBottom: "10px" }}
-              >
+              <h1 className="text-3xl font-bold" style={{ marginBottom: "10px" }}>
                 Đăng nhập
               </h1>
 
@@ -326,7 +326,7 @@ const Header = () => {
                   backgroundColor: "#ddd",
                   outline: "none",
                 }}
-                onChange={(event) => setUserName(event.target.value)}
+                onChange={event => setUserName(event.target.value)}
                 type="text"
                 placeholder="Mời nhập tên tài khoản"
                 name="username"
@@ -347,7 +347,7 @@ const Header = () => {
                   backgroundColor: "#ddd",
                   outline: "none",
                 }}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={event => setPassword(event.target.value)}
                 type="password"
                 placeholder="******"
                 name="password"
@@ -395,7 +395,7 @@ const Header = () => {
                   outline: "none",
                 }}
                 value={userNameRegister}
-                onChange={(event) => setUserNameRegister(event.target.value)}
+                onChange={event => setUserNameRegister(event.target.value)}
                 type="text"
                 placeholder="Mời nhập tên tài khoản"
                 name="username"
@@ -417,7 +417,7 @@ const Header = () => {
                   outline: "none",
                 }}
                 value={passwordRegister}
-                onChange={(event) => setPasswordRegister(event.target.value)}
+                onChange={event => setPasswordRegister(event.target.value)}
                 type="password"
                 placeholder="******"
                 name="password"
@@ -439,9 +439,7 @@ const Header = () => {
                   outline: "none",
                 }}
                 value={checkPasswordRegister}
-                onChange={(event) =>
-                  setCheckPasswordRegister(event.target.value)
-                }
+                onChange={event => setCheckPasswordRegister(event.target.value)}
                 type="password"
                 placeholder="******"
                 name="password-repeat"

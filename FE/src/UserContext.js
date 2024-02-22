@@ -10,19 +10,19 @@ export const UserProvider = ({ children }) => {
 
   const updateUser = async () => {
     try {
-        console.log(1);
-        const a = !!localStorage.getItem("user")
-        console.log(a);
-        const accessToken = JSON.parse(localStorage.getItem("user")).accessToken
-        console.log(accessToken);
+      console.log(1);
+      const a = !!localStorage.getItem("user")
+      console.log(a);
+      const accessToken = JSON.parse(localStorage.getItem("user")).accessToken
+      console.log(accessToken);
       const response = await axios.get("http://localhost:8000/user/get-current", {
         headers: {
           Authorization: "Bearer " + accessToken,
         },
       });
       console.log(response);
-    //   const data = await response.json();
-    console.log(response.data.rs);
+      //   const data = await response.json();
+      console.log(response.data.rs);
 
       if (response.data.success) {
         setUser(response.data.rs);
@@ -38,12 +38,12 @@ export const UserProvider = ({ children }) => {
     setIsLoggedIn(!!token); // Chuyển đổi thành boolean để kiểm tra đăng nhập
     if (token) {
       updateUser();
-    
+
     }
   }, []); // Gọi một lần khi component mount và logic đăng nhập thay đổi
 
   return (
-    <UserContext.Provider value={{ setUser, isLoggedIn, updateUser }}>
+    <UserContext.Provider value={{ setUser, isLoggedIn, updateUser, user }}>
       {children}
     </UserContext.Provider>
   );
