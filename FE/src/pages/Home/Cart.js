@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { formatCurrencyInVnd } from "../../helper";
 import { useUser } from "../../UserContext";
 import emptyCartSvg from "../../assets/images/cart_empty.svg";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import CartDropdown from "./CartDropdown";
 
 export default function Cart() {
@@ -38,10 +38,14 @@ export default function Cart() {
       if (response.data?.success) {
         updateUser();
       } else {
-        message.error("Thay đổi số lượng không thành công");
+        throw new Error(response?.message || "Cập nhật giỏ hàng thất bại");
       }
     } catch (error) {
-      console.error("Lỗi khi gọi API addVariantToCart:", error.message);
+      if (error instanceof AxiosError) {
+        message.error(error.response.data?.message || "Cập nhật giỏ hàng thất bại");
+      } else {
+        message.error(error?.message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -60,7 +64,12 @@ export default function Cart() {
       newQuantity = inputQuantity;
     }
 
-    changeQuantity(cartItem.variant, newQuantity);
+    if (newQuantity <= 0) {
+      hanelRemoveCartItem(cartItem);
+    } else {
+      changeQuantity(cartItem.variant, newQuantity);
+    }
+
   };
 
   const hanelRemoveCartItem = async cartItem => {
@@ -136,7 +145,7 @@ export default function Cart() {
                                 <Link
                                   to={`/detail/${cartItem?.productId}`}
                                   title={cartItem?.name}
-                                  className="text-sm font-medium text-[#333333]"
+                                  className="text-sm font-medium text-[#333333] hover:text-[#999999]"
                                 >
                                   {cartItem?.name}
                                 </Link>
@@ -161,27 +170,24 @@ export default function Cart() {
                             <div className="flex justify-center text-sm">
                               <button
                                 type="button"
-                                className="rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg disabled:bg-[#0000000a] disabled:cursor-not-allowed"
+                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${isLoading ? "pointer-events-none" : ""}`}
                                 onClick={() => handleChangeQuantity("decrease", cartItem)}
-                                disabled={isLoading || cartItem.quantity === 1}
                               >
                                 -
                               </button>
                               <input
                                 type="text"
-                                className=" rounded-none  border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b disabled:bg-[#0000000a] disabled:cursor-not-allowed"
+                                className={`rounded-none border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b ${isLoading ? "pointer-events-none" : ""}`}
                                 maxlength="2"
                                 pattern="[0-9]*"
                                 value={cartItem.quantity}
                                 onChange={event =>
                                   handleChangeQuantity("update", cartItem, event.target.value)
                                 }
-                                disabled={isLoading}
                               />
                               <button
-                                className="rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg disabled:bg-[#0000000a] disabled:cursor-not-allowed"
+                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${isLoading ? "pointer-events-none" : ""}`}
                                 onClick={() => handleChangeQuantity("increase", cartItem)}
-                                disabled={isLoading}
                               >
                                 +
                               </button>

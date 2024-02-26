@@ -12,6 +12,7 @@ const Header = () => {
   const name = JSON.parse(localStorage.getItem("user"));
   const handleOnclick = () => {
     localStorage.removeItem("user");
+    setUser(null);
     navigate("/");
   };
 
@@ -24,7 +25,7 @@ const Header = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  const { updateUser, user: userData } = useUser();
+  const { updateUser, user: userData, setUser } = useUser();
   const totalQuantityInCart = getQuantityInCart(userData?.cart?.cartDetail);
 
   const handleLogin = async () => {

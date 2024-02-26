@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import { Button, message } from "antd";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../../UserContext";
 import "./DetailsInfo.css";
@@ -64,15 +64,18 @@ const DetailsInfo = (data) => {
             },
           }
         );
-        console.log(response);
         if (response.data.success) {
           // Xử lý sau khi thêm vào giỏ hàng thành công (nếu cần)
           message.success("Thêm vào giỏ hàng thành công")
         } else {
-          console.error("Có lỗi khi thêm vào giỏ hàng:", response.message);
+          throw new Error(response?.message || "Thêm vào giỏ hàng không thành công")
         }
       } catch (error) {
-        console.error("Lỗi khi gọi API addVariantToCart:", error.message);
+        if (error instanceof AxiosError) {
+          message.error(error.response.data?.message)
+        } else {
+          message.error(error?.message)
+        }
       }
       updateUser();
     };
