@@ -8,11 +8,7 @@ const Footer = () => {
         <div className="container grid lg:grid-cols-3 justify-between items-start">
           <div className="flex items-center justify-center">
             <Link to="/">
-              <img
-                src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo_footer.png?1703758476085"
-                alt=""
-                className="mt-4"
-              />
+              <p className="text-3xl text-white">Mind Clothing Store</p>
             </Link>
             {/* <ul>
               <li>
@@ -69,7 +65,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-sm lg:text-base text-[#999999] mt-2">
-              Theo dõi Teelab từ các nền tảng khác nhau nhé!
+              Theo dõi Mind Clothing Store từ các nền tảng khác nhau nhé!
             </p>
             <ul className="flex gap-3 mt-2">
               <li>

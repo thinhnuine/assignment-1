@@ -12,7 +12,10 @@ const {
   getNewUserYear,
 } = require("../controllers/statistical");
 
-const { getPagingOrder, getAllOrder } = require("../controllers/order/index.js");
+const {
+  getPagingOrder,
+  getAllOrder,
+} = require("../controllers/order/index.js");
 
 const {
   getProductByCategory,
@@ -27,11 +30,16 @@ const {
   deleteVariant,
   createVariant,
 } = require("../controllers/variant/index.js");
-const { loginAdmin } = require("../controllers/userControler/index.js");
+const {
+  loginAdmin,
+  refeshToken,
+} = require("../controllers/userControler/index.js");
 
 const statisticalRouter = express.Router();
 
 statisticalRouter.post("/login", loginAdmin);
+
+statisticalRouter.get("/admin/refeshToken/:id", refeshToken);
 
 statisticalRouter.get(
   "/order-today",
@@ -115,7 +123,7 @@ statisticalRouter.post(
 );
 
 // order
-statisticalRouter.get("/order/all",authentication,authorization, getAllOrder);
+statisticalRouter.get("/order/all", authentication, authorization, getAllOrder);
 statisticalRouter.get(
   "/product/get-by-category",
   authentication,

@@ -45,10 +45,10 @@ const Shop = () => {
 
   return (
     <>
-    <Header/>
+      <Header />
       <section className="shop-content">
         <div className="sidebar">
-          <h1>TeeLab</h1>
+          <h1>Mind Clothing Store</h1>
           {categories &&
             categories.map((category) => (
               <div
@@ -68,8 +68,11 @@ const Shop = () => {
             )
             .map((data) => (
               <div className="containerz" key={data.id}>
-              <img src={data.thumbnail} alt="#" />
-              <Link to={`/detail/${data._id}`}> <p>{data.name}</p></Link>
+                <img src={data.thumbnail} alt="#" />
+                <Link to={`/detail/${data._id}`}>
+                  {" "}
+                  <p>{data.name}</p>
+                </Link>
                 <p className="name">{data.category.name}</p>
                 <div className="price-math">
                   <h4>
@@ -81,7 +84,9 @@ const Shop = () => {
                       "0"}
                     đ
                   </h4>
-                  {data.priceDetail && <del className="delete">{data.priceDetail.price}đ</del>}
+                  {data.priceDetail && (
+                    <del className="delete">{data.priceDetail.price}đ</del>
+                  )}
                   {/* <span className="cart-icon">
                     <AiOutlineShoppingCart />
                   </span> */}

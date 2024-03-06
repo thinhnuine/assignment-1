@@ -9,81 +9,89 @@ const {
 const userModel = require("../../models/User.js");
 const { error } = require("../order/validation.js");
 const User = require("../../models/User.js");
+const nodemailer = require("nodemailer");
+const { OAuth2Client } = require("google-auth-library");
+
+const GOOGLE_MAILER_CLIENT_ID =
+  "1051458480695-c0bk99e282fpu8nou08p0hp2o4n4e42a.apps.googleusercontent.com";
+const GOOGLE_MAILER_CLIENT_SECRET = "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";
+const GOOGLE_MAILER_REFRESH_TOKEN =
+  "1//04DnrxxL5l_MwCgYIARAAGAQSNwF-L9IrLbxQuq_EaB2ufY3EiY552qEaQ_-3os-MlZULq-2lm_xleaV5j_ORy0P7HvPqLgjrB4s";
+const ADMIN_EMAIL_ADDRESS = "ndtuneti@gmail.com";
 
 const login = async (req, res) => {
   try {
     const { password, email } = req.body;
 
-        const emailExist = await Users.findOne({ email })
-        const userName = emailExist?.userName;
-        if (!emailExist) {
-            return res.status(400).json("Người dùng không tồn tại");
-        }
-
-        const checkPassword = bcrypt.compareSync(password, emailExist.password)
-        if (!checkPassword) {
-            return res.status(400).json("Sai mật khẩu");
-        }
-
-        //create access token,refresh token
-        const accessToken = generateAccessToken(emailExist._id)
-        const refreshToken = generateRefreshToken(emailExist._id)
-
-        console.log(accessToken)
-        await Users.findByIdAndUpdate(emailExist._id, { refreshToken });
-        
-        return res.status(201).json({
-            id: emailExist._id,
-            email: email,
-            role: emailExist.role,
-            userName: userName,
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        })
-    } catch (error) {
-        return res.status(400).json({ message: error.message})
+    const emailExist = await Users.findOne({ email });
+    const userName = emailExist?.userName;
+    if (!emailExist) {
+      return res.status(400).json("Người dùng không tồn tại");
     }
+
+    const checkPassword = bcrypt.compareSync(password, emailExist.password);
+    if (!checkPassword) {
+      return res.status(400).json("Sai mật khẩu");
+    }
+
+    //create access token,refresh token
+    const accessToken = generateAccessToken(emailExist._id);
+    const refreshToken = generateRefreshToken(emailExist._id);
+
+    console.log(accessToken);
+    await Users.findByIdAndUpdate(emailExist._id, { refreshToken });
+
+    return res.status(201).json({
+      id: emailExist._id,
+      email: email,
+      role: emailExist.role,
+      userName: userName,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
+};
 const loginAdmin = async (req, res) => {
   try {
     const { password, email } = req.body;
 
-        const emailExist = await Users.findOne({ email })
-        const userName = emailExist?.userName;
-        if (!emailExist) {
-            return res.status(400).json("Người dùng không tồn tại");
-        }
-
-        const checkPassword = bcrypt.compareSync(password, emailExist.password)
-        if (!checkPassword) {
-            return res.status(400).json("Sai mật khẩu");
-        }
-        const role = emailExist?.role
-        console.log(role);
-        if (!(role === "admin")) {
-            return res.status(400).json("Không phải admin không thể truy cập");
-        }
-
-        //create access token,refresh token
-        const accessToken = generateAccessToken(emailExist._id)
-        const refreshToken = generateRefreshToken(emailExist._id)
-
-        console.log(accessToken)
-        await Users.findByIdAndUpdate(emailExist._id, { refreshToken });
-        
-        return res.status(201).json({
-            id: emailExist._id,
-            email: email,
-            role: emailExist.role,
-            userName: userName,
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        })
-    } catch (error) {
-        return res.status(400).json({ message: error.message})
+    const emailExist = await Users.findOne({ email });
+    const userName = emailExist?.userName;
+    if (!emailExist) {
+      return res.status(400).json("Người dùng không tồn tại");
     }
-  }
 
+    const checkPassword = bcrypt.compareSync(password, emailExist.password);
+    if (!checkPassword) {
+      return res.status(400).json("Sai mật khẩu");
+    }
+    const role = emailExist?.role;
+    console.log(role);
+    if (role !== "admin") {
+      return res.status(400).json("Không phải admin không thể truy cập");
+    }
+
+    //create access token,refresh token
+    const accessToken = generateAccessToken(emailExist._id);
+    const refreshToken = generateRefreshToken(emailExist._id);
+
+    console.log(accessToken);
+    await Users.findByIdAndUpdate(emailExist._id, { refreshToken });
+
+    return res.status(201).json({
+      id: emailExist._id,
+      email: email,
+      role: emailExist.role,
+      userName: userName,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
 
 const register = async (req, res) => {
   try {
@@ -134,6 +142,35 @@ const register = async (req, res) => {
     }
 
     const newUser = await Users.create(body);
+    const myOAuth2Client = new OAuth2Client(
+      GOOGLE_MAILER_CLIENT_ID,
+      GOOGLE_MAILER_CLIENT_SECRET
+    );
+
+    myOAuth2Client.setCredentials({
+      refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
+    });
+
+    const myAccessTokenObject = await myOAuth2Client.getAccessToken();
+    const myAccessToken = myAccessTokenObject?.token;
+    const transport = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: ADMIN_EMAIL_ADDRESS,
+        clientId: GOOGLE_MAILER_CLIENT_ID,
+        clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
+        refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
+        accessToken: myAccessToken,
+      },
+    });
+    const mailOptions = {
+      to: email, // Gửi đến ai?
+      subject: "Tao tai khoan thanh cong", // Tiêu đề email
+      html: `<h3>Tao tai khoan thanh cong</h3>`, // Nội dung email
+    };
+    // Gọi hành động gửi email
+    await transport.sendMail(mailOptions);
 
     return res.status(201).json({ "Thêm mới thành công User: \n": newUser });
   } catch (error) {
@@ -200,8 +237,8 @@ const updateUser = async (req, res) => {
       console.log(error.message);
       throw new Error("Email hoặc mật khẩu không hợp lệ.");
     }
-   
-    if( body?.password ) {
+
+    if (body?.password) {
       const sath = await bcrypt.genSalt(10);
       const newPass = await bcrypt.hash(body.password, sath);
       body.password = newPass;
@@ -216,8 +253,8 @@ const updateUser = async (req, res) => {
     });
   } catch (error) {
     return res.status(400).json({
-      error: error.message
-    })
+      error: error.message,
+    });
   }
 };
 
@@ -248,11 +285,14 @@ const deleteUser = async (req, res) => {
 const refeshToken = async (req, res) => {
   try {
     const id = req.params.id;
-    // console.log(id)
+    //trả id của user cần refesh token
     const userExits = await userModel.findById(id);
     const refreshToken = userExits.refreshToken;
+    //tạo lại refesh token
+    const accessToken = generateAccessToken(id);
 
     res.status(201).json({
+      accessToken: accessToken,
       refreshToken: refreshToken,
       status: "success",
       user: userExits,
@@ -293,14 +333,15 @@ const getUserById = async (req, res) => {
   } catch (error) {}
 };
 
-
 // Hàm tính tổng tiền từ danh sách sản phẩm trong giỏ hàng
 async function calculateTotalPrice(cartDetail) {
   let totalPrice = 0;
 
   for (const item of cartDetail) {
     // Lấy giá từ variantModel
-    const variant = await variantModel.findById(item.variant).select("priceDetail");
+    const variant = await variantModel
+      .findById(item.variant)
+      .select("priceDetail");
 
     if (!variant.priceDetail.saleRatio) {
       const price = variant.priceDetail.price * item.quantity;
@@ -340,7 +381,7 @@ const updateCart = async (req, res) => {
         { $set: { "cart.cartDetail.$.quantity": quantity } },
         { new: true }
       );
-      
+
       const totalPrice = await calculateTotalPrice(response.cart.cartDetail);
       response.cart.totalPrice = totalPrice;
       await response.save();
@@ -362,10 +403,9 @@ const updateCart = async (req, res) => {
         { new: true }
       );
 
-     const totalPrice = await calculateTotalPrice(response.cart.cartDetail);
+      const totalPrice = await calculateTotalPrice(response.cart.cartDetail);
       response.cart.totalPrice = totalPrice;
       await response.save();
-      
 
       return res.status(200).json({
         success: response ? true : false,
@@ -400,7 +440,7 @@ const removeVariantInCart = async (req, res) => {
 
     const response = await userModel.findByIdAndUpdate(
       _id,
-      { $pull: { "cart.cartDetail": { variant: variant, } } },
+      { $pull: { "cart.cartDetail": { variant: variant } } },
       { new: true }
     );
 
@@ -423,10 +463,10 @@ const removeVariantInCart = async (req, res) => {
 
 const getCurrent = async (req, res) => {
   const { _id } = req.user;
-  const user = await User.findById(_id).select('-password -role');
+  const user = await User.findById(_id).select("-password -role");
   return res.status(200).json({
     success: user ? true : false,
-    rs: user ? user : 'User not found',
+    rs: user ? user : "User not found",
   });
 };
 

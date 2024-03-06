@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
-import "./Home.css";
+import { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { Badge, Button, Divider, Drawer, Modal, message } from "antd";
+import React, { useContext, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../UserContext";
-import { Badge, Button, Divider, Drawer, Modal, message } from "antd";
-import { ShoppingCartOutlined, MenuOutlined } from "@ant-design/icons";
+import "./Home.css";
 const Header = () => {
   const navigate = new useNavigate();
-
+  const form = useRef();
   const name = JSON.parse(localStorage.getItem("user"));
   const handleOnclick = () => {
     localStorage.removeItem("user");
@@ -22,7 +22,6 @@ const Header = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {}, []);
   const setUser = useContext(useUser);
 
   const { updateUser } = useUser();
@@ -61,7 +60,7 @@ const Header = () => {
   const [passwordRegister, setPasswordRegister] = useState("");
   const [checkPasswordRegister, setCheckPasswordRegister] = useState("");
 
-  const handleAddUser = () => {
+  const handleAddUser = async () => {
     const response = fetch("http://localhost:8000/user/register", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, *cors, same-origin
@@ -81,7 +80,6 @@ const Header = () => {
 
     response.then((res) =>
       res.json().then((data) => {
-        console.log(data);
         if (checkPasswordRegister != passwordRegister) {
           alert("Mật khẩu không trùng khớp!");
           return false;
@@ -153,10 +151,7 @@ const Header = () => {
               />
 
               <Link to="/">
-                <img
-                  src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo.png?1692958575148"
-                  alt=""
-                />
+                <p className="text-3xl">Mind Clothing Store</p>
               </Link>
 
               <div className="flex items-center gap-3">
@@ -242,10 +237,7 @@ const Header = () => {
             </li>
             <li className="cursor-pointer">
               <Link to="/">
-                <img
-                  src="https://bizweb.dktcdn.net/100/415/697/themes/902041/assets/logo.png?1692958575148"
-                  alt=""
-                />
+                <p className="text-3xl">Mind Clothing Store</p>
               </Link>
             </li>
             <li className="cursor-pointer">
@@ -374,7 +366,7 @@ const Header = () => {
             </p>
           </div>
         ) : (
-          <div>
+          <div ref={form}>
             <div className="register">
               <h1 className="text-3xl font-bold">Đăng ký</h1>
               <p>Vui lòng điền thông tin để đăng ký</p>

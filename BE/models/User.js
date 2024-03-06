@@ -44,10 +44,10 @@ const User = mongoose.Schema(
           quantity: { type: Number, default: 1 },
         },
       ],
-      totalPrice: { type: Number, },
+      totalPrice: { type: Number },
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("users", User)
+module.exports = mongoose.model("users", User);

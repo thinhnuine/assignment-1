@@ -4,26 +4,30 @@ import {
   ShoppingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Card, Space, Statistic, Table, Typography } from "antd";
-import { Button, Popconfirm, Form, Select, Input } from "antd";
-import { Divider, Flex, Radio } from "antd";
+import {
+  Card,
+  Popconfirm,
+  Radio,
+  Space,
+  Statistic,
+  Table,
+  Typography,
+} from "antd";
 
-import { useEffect, useState } from "react";
-// import { getCustomers, getInventory, getOrders, getRevenue } from "../../API";
-import axios from "axios";
 import { useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-const { Option } = Select;
+import { createApiPjc } from "../../../services";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -39,45 +43,28 @@ function Dashboard() {
   const [customers, setCustomers] = useState(0);
   const [revenue, setRevenue] = useState(0);
   const [statistical, setStatistical] = useState(2);
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/user", {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get("http://localhost:8000/user")
       .then((response) => setCustomers(response.data.countUser))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/admin/order/all", {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get("http://localhost:8000/admin/order/all")
       .then((response) => setOrders(response.data.orders.length))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/product", {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get("http://localhost:8000/product")
       .then((response) => setInventory(response.data.products.length))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/admin/order-year?year=2023", {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get("http://localhost:8000/admin/order-year?year=2023")
       .then((response) => setRevenue(response.data.sumTotal))
       .catch((error) => console.error("Error:", error));
   }, []);
@@ -189,7 +176,6 @@ function DashboardCard({ title, value, icon }) {
 function RecentOrders() {
   const [orders, setOrders] = useState([]);
   const toast = useToast();
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const transformData = (data) => {
     return data.map((item) => {
@@ -201,12 +187,8 @@ function RecentOrders() {
   };
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/admin/order-today`, {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get(`http://localhost:8000/admin/order-today`)
       .then((response) => setOrders(response.data.orderToday))
       .catch((error) => console.error("Error:", error));
   }, []);
@@ -365,15 +347,10 @@ function DashboardChart() {
       };
 
       for (const month of months) {
-        const response = await fetch(
-          `http://localhost:8000/admin/order-month?month=${month}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/order-month?month=${month}`
         );
-        const result = await response.json();
+        const result = response;
         chartData.labels.push(`Tháng ${month}`);
         chartData.datasets[0].data.push(result.countOrderMonth || 0);
       }
@@ -425,15 +402,10 @@ const RevenueChart = () => {
       };
 
       for (const month of months) {
-        const response = await fetch(
-          `http://localhost:8000/admin/order-month?month=${month}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/order-month?month=${month}`
         );
-        const result = await response.json();
+        const result = await response;
         chartData.labels.push(`Tháng ${month}`);
         chartData.datasets[0].data.push(result.sumTotal || 0);
       }
@@ -491,15 +463,10 @@ const YearlyRevenueChart = () => {
       };
 
       for (const year of years) {
-        const response = await fetch(
-          `http://localhost:8000/admin/order-year?year=${year}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/order-year?year=${year}`
         );
-        const result = await response.json();
+        const result = await response;
         chartData.labels.push(`Năm ${year}`);
         chartData.datasets[0].data.push(result.sumTotal || 0);
       }
@@ -518,8 +485,6 @@ const YearlyRevenueChart = () => {
   );
 };
 const YearlyOrderChart = () => {
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
-
   const [data, setData] = useState({
     labels: [],
     datasets: [
@@ -554,15 +519,10 @@ const YearlyOrderChart = () => {
       };
 
       for (const year of years) {
-        const response = await fetch(
-          `http://localhost:8000/admin/order-year?year=${year}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/order-year?year=${year}`
         );
-        const result = await response.json();
+        const result = await response;
         chartData.labels.push(`Năm ${year}`);
         chartData.datasets[0].data.push(result.countOrderYear || 0);
       }
@@ -581,8 +541,6 @@ const YearlyOrderChart = () => {
   );
 };
 const DailyRevenueChart = () => {
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
-
   const [data, setData] = useState({
     labels: [],
     datasets: [
@@ -615,15 +573,10 @@ const DailyRevenueChart = () => {
       };
 
       for (const day of days) {
-        const response = await fetch(
-          `http://localhost:8000/admin/order-day?day=${day}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/order-day?day=${day}`
         );
-        const result = await response.json();
+        const result = await response;
         chartData.labels.push(`Ngày ${day}`);
         chartData.datasets[0].data.push(result.sumTotal || 0);
       }
@@ -642,8 +595,6 @@ const DailyRevenueChart = () => {
   );
 };
 const DailyOrderChart = () => {
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
-
   const [data, setData] = useState({
     labels: [],
     datasets: [
@@ -676,15 +627,10 @@ const DailyOrderChart = () => {
       };
 
       for (const day of days) {
-        const response = await fetch(
-          `http://localhost:8000/admin/order-day?day=${day}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/order-day?day=${day}`
         );
-        const result = await response.json();
+        const result = await response;
         chartData.labels.push(`Ngày ${day}`);
         chartData.datasets[0].data.push(result.countOrderToday || 0);
       }
@@ -737,15 +683,10 @@ const DailyUserChart = () => {
       };
 
       for (const day of days) {
-        const response = await fetch(
-          `http://localhost:8000/admin/user-day?day=${day}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/user-day?day=${day}`
         );
-        const result = await response.json();
+        const result = await response;
         chartData.labels.push(`Ngày ${day}`);
         chartData.datasets[0].data.push(result.countNewUsersDay || 0);
       }
@@ -800,15 +741,10 @@ const YearlyUserChart = () => {
       };
 
       for (const year of years) {
-        const response = await fetch(
-          `http://localhost:8000/admin/user-year?year=${year}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/user-year?year=${year}`
         );
-        const result = await response.json();
+        const result = await response;
         chartData.labels.push(`Năm ${year}`);
         chartData.datasets[0].data.push(result.countNewUsersDay || 0);
       }
@@ -860,15 +796,10 @@ const MonthlyUserChart = () => {
       };
 
       for (const month of months) {
-        const response = await fetch(
-          `http://localhost:8000/admin/user-month?month=${month}`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+        const response = await createApiPjc().get(
+          `http://localhost:8000/admin/user-month?month=${month}`
         );
-        const result = await response.json();
+        const result = await response;
         chartData.labels.push(`Tháng ${month}`);
         chartData.datasets[0].data.push(result.countNewUsersDay || 0);
       }

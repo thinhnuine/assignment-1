@@ -1,18 +1,11 @@
-import { Button, Pagination } from "antd";
-import { Link } from "react-router-dom";
-import { Space, Table, Tag, Popconfirm, Badge } from "antd";
-import { useEffect, useState } from "react";
-import {
-  deleteUser,
-  deleteProduct,
-  getProductById,
-  getProduct,
-} from "../../services";
 import { useToast } from "@chakra-ui/react";
+import { Pagination, Popconfirm, Space, Table } from "antd";
+import { useEffect, useState } from "react";
+import { createApiPjc } from "../../../services";
+import { getProduct } from "../../services";
 import CreateProduct from "./CreateProduct";
-import EditProduct from "./EditProduct";
-import axios from "axios";
 import CreateVariant from "./CreateVariant";
+import EditProduct from "./EditProduct";
 import EditVariant from "./EditVariant";
 
 const ManageProduct = () => {
@@ -22,7 +15,6 @@ const ManageProduct = () => {
   const [count, setCount] = useState(0);
   const toast = useToast();
   const [variantId, setVariantId] = useState();
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const transformData = (data) => {
     return data.map((item) => {
@@ -46,11 +38,9 @@ const ManageProduct = () => {
   };
   const handleDeleteVariant = async (variantId) => {
     try {
-      await axios.delete(`http://localhost:8000/admin/variant/${variantId}`, {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      });
+      await createApiPjc().delete(
+        `http://localhost:8000/admin/variant/${variantId}`
+      );
       setProducts((prevOrders) =>
         prevOrders.filter((order) => order.variants._id !== variantId)
       );
@@ -70,11 +60,9 @@ const ManageProduct = () => {
   };
   const handleDeleteOrder = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:8000/admin/product/${orderId}`, {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      });
+      await createApiPjc().delete(
+        `http://localhost:8000/admin/product/${orderId}`
+      );
       setProducts((prevOrders) =>
         prevOrders.filter((order) => order._id !== orderId)
       );

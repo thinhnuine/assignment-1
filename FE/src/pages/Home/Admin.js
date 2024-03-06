@@ -66,7 +66,7 @@ const Admin = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="logo-vertical">TEELAB</div>
+        <div className="logo-vertical">Mind Clothing Store</div>
         <Menu
           theme="dark"
           defaultSelectedKeys={["1"]}
@@ -130,7 +130,7 @@ const Admin = () => {
             textAlign: "center",
           }}
         >
-          TEELAB
+          Mind Clothing Store
         </Footer>
       </Layout>
     </Layout>
