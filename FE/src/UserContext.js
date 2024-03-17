@@ -1,6 +1,6 @@
 // UserContext.js
-import axios from "axios";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { createApiPjc } from "./services";
 
 const UserContext = createContext();
 
@@ -10,20 +10,11 @@ export const UserProvider = ({ children }) => {
 
   const updateUser = async () => {
     try {
-      console.log(1);
-      const a = !!localStorage.getItem("user")
+      const a = !!localStorage.getItem("user");
       console.log(a);
-      const accessToken = JSON.parse(localStorage.getItem("user")).accessToken
-      console.log(accessToken);
-      const response = await axios.get("http://localhost:8000/user/get-current", {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      });
-      console.log(response);
-      //   const data = await response.json();
-      console.log(response.data.rs);
-
+      const response = await createApiPjc().get(
+        "http://localhost:8000/user/get-current"
+      );
       if (response.data.success) {
         setUser(response.data.rs);
         setIsLoggedIn(true);
@@ -38,7 +29,6 @@ export const UserProvider = ({ children }) => {
     setIsLoggedIn(!!token); // Chuyển đổi thành boolean để kiểm tra đăng nhập
     if (token) {
       updateUser();
-
     }
   }, []); // Gọi một lần khi component mount và logic đăng nhập thay đổi
 

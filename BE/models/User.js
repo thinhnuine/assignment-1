@@ -54,10 +54,10 @@ const User = mongoose.Schema(
           productId: { type: mongoose.Types.ObjectId, ref: "products" },
         },
       ],
-      totalPrice: { type: Number, },
+      totalPrice: { type: Number },
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("users", User)
+module.exports = mongoose.model("users", User);

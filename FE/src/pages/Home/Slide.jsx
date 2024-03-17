@@ -103,10 +103,10 @@ const Slide = () => {
         <div className="text-center py-10 lg:py-[60px] px-4 container">
           <div className="title text-xl lg:text-2xl">Enjoy Your Youth!</div>
           <div className="text-sm mt-2">
-            Không chỉ là thời trang, TEELAB còn là “phòng thí nghiệm” của tuổi
-            trẻ - nơi nghiên cứu và cho ra đời nguồn năng lượng mang tên
-            “Youth”. Chúng mình luôn muốn tạo nên những trải nghiệm vui vẻ, năng
-            động và trẻ trung.
+            Không chỉ là thời trang, Mind Clothing Store còn là “phòng thí
+            nghiệm” của tuổi trẻ - nơi nghiên cứu và cho ra đời nguồn năng lượng
+            mang tên “Youth”. Chúng mình luôn muốn tạo nên những trải nghiệm vui
+            vẻ, năng động và trẻ trung.
           </div>
         </div>
       </div>

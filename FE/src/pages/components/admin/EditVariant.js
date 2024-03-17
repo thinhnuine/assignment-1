@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Button, Modal, Form, Input, InputNumber, Select } from "antd";
 import { useToast } from "@chakra-ui/react";
-import axios from "axios";
+import { Button, Form, Input, InputNumber, Modal } from "antd";
+import React, { useEffect, useState } from "react";
+import { createApiPjc } from "../../../services";
 import { getVariantById } from "../../services";
 
 const EditVariant = (id) => {
@@ -9,7 +9,6 @@ const EditVariant = (id) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const toast = useToast();
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   console.log(id.id);
   const showModal = () => {
@@ -47,7 +46,7 @@ const EditVariant = (id) => {
   const onFinish = async (values) => {
     console.log(values);
     try {
-      const result = await axios.put(
+      const result = await createApiPjc().put(
         `http://localhost:8000/admin/variant/${id.id}`,
         {
           name: values.name,
@@ -59,11 +58,6 @@ const EditVariant = (id) => {
           color: values.color,
           size: values.size,
           countInStock: values.countInStock,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
         }
       );
       toast({

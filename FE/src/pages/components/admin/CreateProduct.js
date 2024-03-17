@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import { Button, Modal, Form, Input, InputNumber, Select } from "antd";
 import { useToast } from "@chakra-ui/react";
-import axios from "axios";
+import { Button, Form, Input, Modal, Select } from "antd";
+import React, { useState } from "react";
+import { createApiPjc } from "../../../services";
 
 const CreateProduct = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const toast = useToast();
-  const { id, accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const showModal = () => {
     setOpen(true);
@@ -27,7 +26,7 @@ const CreateProduct = () => {
 
   const onFinish = async (values) => {
     try {
-      const result = await axios.post(
+      const result = await createApiPjc().post(
         `http://localhost:8000/admin/product/${values.category}`,
         {
           name: values.name,
@@ -40,11 +39,6 @@ const CreateProduct = () => {
             image: values.image,
           },
           thumbnail: values.thumbnail,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
         }
       );
       toast({

@@ -39,6 +39,12 @@ const Login = () => {
       res.json().then((data) => {
         if (data.email === userName) {
           localStorage.setItem("user/admin", JSON.stringify(data));
+          localStorage.setItem(
+            "refreshToken",
+            JSON.stringify(data.refreshToken)
+          );
+          localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
+          localStorage.setItem("id", JSON.stringify(data.id));
 
           message.success("Đăng nhập thành công!");
           navigate("/admin");

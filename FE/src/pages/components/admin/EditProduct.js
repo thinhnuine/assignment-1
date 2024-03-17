@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Button, Modal, Form, Input, InputNumber, Select } from "antd";
 import { useToast } from "@chakra-ui/react";
-import { createProduct, getProductById, updateProduct } from "../../services";
-import axios from "axios";
+import { Button, Form, Input, Modal, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import { createApiPjc } from "../../../services";
+import { getProductById } from "../../services";
 
 const EditProduct = (id) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const toast = useToast();
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const showModal = () => {
     setOpen(true);
@@ -49,7 +48,7 @@ const EditProduct = (id) => {
   const onFinish = async (values) => {
     console.log(values);
     try {
-      const result = await axios.put(
+      const result = await createApiPjc().put(
         `http://localhost:8000/admin/product/${id.id}`,
         {
           name: values.name,
@@ -62,11 +61,6 @@ const EditProduct = (id) => {
             image: values.image,
           },
           thumbnail: values.thumbnail,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
         }
       );
 

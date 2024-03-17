@@ -3,6 +3,7 @@ import axios from "axios";
 import { Button, Form, Input, InputNumber } from "antd";
 import Footer from "./Home/Footer";
 import Header from "./Home/Header";
+import { createApiPjc } from "../services";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/",
@@ -98,7 +99,7 @@ const Profile = () => {
 
   useEffect(() => {
     const { id } = JSON.parse(localStorage.getItem("user"));
-    axios
+    createApiPjc()
       .get(`http://localhost:8000/user/${id}`) // Thay :id bằng id thực tế của user
       .then((response) => {
         const userData = response.data.user;
@@ -176,7 +177,7 @@ const Profile = () => {
     console.log(values);
     const { userName, email, birth_year, phone } = values; // Extract values from the form
 
-    const { id, accessToken } = JSON.parse(localStorage.getItem("user")); // Get the user ID from localStorage
+    const { id } = JSON.parse(localStorage.getItem("user")); // Get the user ID from localStorage
 
     const updatedUserData = {
       userName,
@@ -186,12 +187,8 @@ const Profile = () => {
       // Include other fields if needed
     };
 
-    axios
-      .put(`http://localhost:8000/user/${id}`, updatedUserData, {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get(`http://localhost:8000/user/${id}`, updatedUserData)
       .then((response) => {
         console.log("User data updated successfully:", response.data);
         // Handle success, update state or perform other actions

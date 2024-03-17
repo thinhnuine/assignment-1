@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Space, Table, Tag, Popconfirm } from "antd";
-import axios from "axios";
 import { useToast } from "@chakra-ui/react";
-import { deleteUser } from "../../services";
+import { Popconfirm, Space, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { createApiPjc } from "../../../services";
 import CreateUser from "./CreateUser";
 import EditUser from "./EditUser";
 
 const UserAdmin = () => {
-  const { accessToken } = JSON.parse(localStorage.getItem("user/admin"));
   const [user, setUser] = useState([]);
   const toast = useToast();
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/user", {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get("http://localhost:8000/user")
       .then((response) => setUser(response.data.user))
       .catch((error) => console.error("Error:", error));
   }, []);

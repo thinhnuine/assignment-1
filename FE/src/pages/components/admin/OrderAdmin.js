@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Space, Table, Button, Popconfirm, Form, Select, Input } from "antd";
-import axios from "axios";
 import { useToast } from "@chakra-ui/react";
+import { Button, Form, Input, Popconfirm, Select, Space, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { createApiPjc } from "../../../services";
 import {} from "../../services";
 const { Option } = Select;
 
@@ -10,7 +10,6 @@ const OrderAdmin = () => {
   const toast = useToast();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [number, setNumber] = useState();
-  const { id, accessToken } = JSON.parse(localStorage.getItem("user/admin"));
 
   const transformData = (data) => {
     return data.map((item) => {
@@ -23,23 +22,15 @@ const OrderAdmin = () => {
   // const transformedOrders = transformData(orders);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/admin/order/all`, {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get(`http://localhost:8000/admin/order/all`)
       .then((response) => setOrders(response.data.orders))
       .catch((error) => console.error("Error:", error));
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/admin${selectedCategory}${number}`, {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+    createApiPjc()
+      .get(`http://localhost:8000/admin${selectedCategory}${number}`)
       .then((response) => {
         if (selectedCategory === "/order-day?day=") {
           setOrders(response.data.orderToday);

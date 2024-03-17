@@ -1,26 +1,10 @@
 import { useToast } from "@chakra-ui/react";
 import { Button, message } from "antd";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../../UserContext";
+import { createApiPjc } from "../../../services";
 import "./DetailsInfo.css";
-
-// const api = axios.create({
-//   baseURL: "http://localhost:8000",
-// });
-
-// api.interceptors.request.use(
-//   (config) => {
-//     const authToken = JSON.parse(localStorage.getItem("user"))?.accessToken;
-//     if (authToken) {
-//       config.headers["Authorization"] = `Bearer ${authToken}`;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
 
 const DetailsInfo = (data) => {
   const [color, setColor] = useState("");
@@ -51,7 +35,7 @@ const DetailsInfo = (data) => {
     const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
     const addToCart = async () => {
       try {
-        const response = await axios.put(
+        const response = await createApiPjc().put(
           "http://localhost:8000/user/cart",
           {
             variant: selectedVariant._id,

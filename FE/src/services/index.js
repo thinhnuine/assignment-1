@@ -1,23 +1,10 @@
 import axios from "axios";
 import { Router } from "react-router-dom";
 
-// const axiosInstance = axios.create({
-//   baseURL: "http://localhost:8000/",
-// });
-
 const defaultConfig = {
   timeout: 50000,
   basePath: "http://localhost:8000/",
 };
-
-// axiosInstance.interceptors.request.use((config) => {
-//   const token = localStorage.getItem("token");
-//   console.log(token);
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// });
 
 const addInterceptorResponse = (instance) => {
   const interceptorId = instance.interceptors.response.use(
@@ -32,14 +19,20 @@ const addInterceptorResponse = (instance) => {
 
       instance.interceptors.response.eject(interceptorId);
       try {
-        const userId = localStorage.getItem("refreshToken");
-        const result = await createApiPjc.get(`/refeshToken/${userId}`);
-        localStorage.setItem("refreshToken", result.refreshToken);
+        const result = await axios.get(
+          `http://localhost:8000/user/refeshToken/${JSON.parse(
+            localStorage.getItem("id")
+          )}`
+        );
+        localStorage.setItem("refreshToken", result.data.refreshToken);
+        localStorage.setItem("accessToken", result.data.accessToken);
         return instance.request(error.config);
       } catch (e) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("user");
+        localStorage.removeItem("user/admin");
+        localStorage.removeItem("id");
         Router.push("/login");
         return Promise.reject(error);
       } finally {
@@ -72,29 +65,29 @@ export const createApiPjc = () => {
 };
 
 const login = (username, password) => {
-  return createApiPjc.post("/users/login", { username, password });
+  return axios().post("/users/login", { username, password });
 };
 
 const createProduct = (data) => {
-  return createApiPjc.post("/products", data);
+  return createApiPjc().post("/products", data);
 };
 
 const getProduct = (pageSize = 3, pageIndex = 1) => {
-  return createApiPjc.get(
+  return createApiPjc().get(
     `/products/get-pagging?pageSize=${pageSize}&pageIndex=${pageIndex}`
   );
 };
 
 const getProductById = (productId) => {
-  return createApiPjc.get(`/products/${productId}`);
+  return createApiPjc().get(`/products/${productId}`);
 };
 
 const updateProduct = (id, data) => {
-  return createApiPjc.put(`/products/${id}`, data);
+  return createApiPjc().put(`/products/${id}`, data);
 };
 
 const deleteProduct = (id) => {
-  return createApiPjc.delete(`/products/${id}`);
+  return createApiPjc().delete(`/products/${id}`);
 };
 
 export {
