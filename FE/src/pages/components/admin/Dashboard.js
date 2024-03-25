@@ -27,7 +27,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { createApiPjc } from "../../../services";
+import { createApiAdmin } from "../../../services/admin-service";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -45,25 +45,25 @@ function Dashboard() {
   const [statistical, setStatistical] = useState(2);
 
   useEffect(() => {
-    createApiPjc()
+    createApiAdmin()
       .get("http://localhost:8000/user")
       .then((response) => setCustomers(response.data.countUser))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
-    createApiPjc()
+    createApiAdmin()
       .get("http://localhost:8000/admin/order/all")
       .then((response) => setOrders(response.data.orders.length))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
-    createApiPjc()
+    createApiAdmin()
       .get("http://localhost:8000/product")
       .then((response) => setInventory(response.data.products.length))
       .catch((error) => console.error("Error:", error));
   }, []);
   useEffect(() => {
-    createApiPjc()
+    createApiAdmin()
       .get("http://localhost:8000/admin/order-year?year=2023")
       .then((response) => setRevenue(response.data.sumTotal))
       .catch((error) => console.error("Error:", error));
@@ -187,7 +187,7 @@ function RecentOrders() {
   };
 
   useEffect(() => {
-    createApiPjc()
+    createApiAdmin()
       .get(`http://localhost:8000/admin/order-today`)
       .then((response) => setOrders(response.data.orderToday))
       .catch((error) => console.error("Error:", error));
@@ -347,7 +347,7 @@ function DashboardChart() {
       };
 
       for (const month of months) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/order-month?month=${month}`
         );
         const result = response;
@@ -402,7 +402,7 @@ const RevenueChart = () => {
       };
 
       for (const month of months) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/order-month?month=${month}`
         );
         const result = await response;
@@ -463,7 +463,7 @@ const YearlyRevenueChart = () => {
       };
 
       for (const year of years) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/order-year?year=${year}`
         );
         const result = await response;
@@ -519,7 +519,7 @@ const YearlyOrderChart = () => {
       };
 
       for (const year of years) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/order-year?year=${year}`
         );
         const result = await response;
@@ -573,7 +573,7 @@ const DailyRevenueChart = () => {
       };
 
       for (const day of days) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/order-day?day=${day}`
         );
         const result = await response;
@@ -627,7 +627,7 @@ const DailyOrderChart = () => {
       };
 
       for (const day of days) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/order-day?day=${day}`
         );
         const result = await response;
@@ -683,7 +683,7 @@ const DailyUserChart = () => {
       };
 
       for (const day of days) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/user-day?day=${day}`
         );
         const result = await response;
@@ -741,7 +741,7 @@ const YearlyUserChart = () => {
       };
 
       for (const year of years) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/user-year?year=${year}`
         );
         const result = await response;
@@ -796,7 +796,7 @@ const MonthlyUserChart = () => {
       };
 
       for (const month of months) {
-        const response = await createApiPjc().get(
+        const response = await createApiAdmin().get(
           `http://localhost:8000/admin/user-month?month=${month}`
         );
         const result = await response;

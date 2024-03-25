@@ -1,8 +1,8 @@
 import { useToast } from "@chakra-ui/react";
 import { Button, Form, Input, Popconfirm, Select, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import { createApiPjc } from "../../../services";
-import {} from "../../services";
+import { createApiAdmin } from "../../../services/admin-service";
+
 const { Option } = Select;
 
 const OrderAdmin = () => {
@@ -22,14 +22,14 @@ const OrderAdmin = () => {
   // const transformedOrders = transformData(orders);
 
   useEffect(() => {
-    createApiPjc()
+    createApiAdmin()
       .get(`http://localhost:8000/admin/order/all`)
       .then((response) => setOrders(response.data.orders))
       .catch((error) => console.error("Error:", error));
   }, []);
 
   useEffect(() => {
-    createApiPjc()
+    createApiAdmin()
       .get(`http://localhost:8000/admin${selectedCategory}${number}`)
       .then((response) => {
         if (selectedCategory === "/order-day?day=") {

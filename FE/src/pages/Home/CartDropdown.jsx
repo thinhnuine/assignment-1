@@ -6,7 +6,7 @@ import emptyCartSvg from "../../assets/images/cart_empty.svg";
 import { formatCurrencyInVnd } from "../../helper";
 import { Link } from "react-router-dom";
 import "./CartDropdown.css";
-
+import {createApiUser} from '../../services/user-service'
 export default function CartDropdown() {
   const { user, updateUser } = useUser();
 
@@ -17,19 +17,13 @@ export default function CartDropdown() {
 
   const changeQuantity = async (variantId, quantity) => {
     try {
-      const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
       setIsLoading(true);
-      const response = await axios.put(
+      const response = await createApiUser().put(
         "http://localhost:8000/user/cart",
         {
           variant: variantId,
           quantity,
           action: "changeQuantity",
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
         }
       );
 
@@ -40,7 +34,9 @@ export default function CartDropdown() {
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        message.error(error.response.data?.message || "Cập nhật giỏ hàng thất bại");
+        message.error(
+          error.response.data?.message || "Cập nhật giỏ hàng thất bại"
+        );
       } else {
         message.error(error?.message);
       }
@@ -69,11 +65,11 @@ export default function CartDropdown() {
     }
   };
 
-  const hanelRemoveCartItem = async cartItem => {
+  const hanelRemoveCartItem = async (cartItem) => {
     try {
       const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
       setIsLoading(true);
-      const response = await axios.delete(
+      const response = await createApiUser().delete(
         `http://localhost:8000/user/remove-cart/${cartItem.variant}`,
         {
           headers: {
@@ -100,13 +96,18 @@ export default function CartDropdown() {
         {cartDetails.length > 0 ? (
           <>
             <div className="cart-list-item h-auto md:max-h-96 overflow-y-auto px-3 pt-3">
-              {cartDetails.map(cartItem => {
+              {cartDetails.map((cartItem) => {
                 const priceAProduct =
-                  cartItem.priceDetail.price * ((100 - cartItem.priceDetail.saleRatio) / 100);
+                  cartItem.priceDetail.price *
+                  ((100 - cartItem.priceDetail.saleRatio) / 100);
                 return (
                   <div className="cart-item flex justify-between gap-3 border-b border-[#ebebeb] pb-3 mb-3">
                     <div className="product-image flex-shrink-0">
-                      <img src={cartItem.image} alt="product_image" className="w-16 h-16" />
+                      <img
+                        src={cartItem.image}
+                        alt="product_image"
+                        className="w-16 h-16"
+                      />
                     </div>
                     <div className="product-details flex flex-col">
                       <div className="product-name mb-1">
@@ -123,14 +124,18 @@ export default function CartDropdown() {
                       </div>
                       <div className="product-quantity-price grid grid-cols-2">
                         <div className="box-left">
-                          <span className="text-xs mb-1 text-[#333333]">Số lượng</span>
+                          <span className="text-xs mb-1 text-[#333333]">
+                            Số lượng
+                          </span>
                           <div className="flex justify-start text-sm">
                             <button
                               type="button"
                               className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg disabled:bg-[#0000000a] disabled:cursor-not-allowed ${
                                 isLoading ? "pointer-events-none" : ""
                               }`}
-                              onClick={() => handleChangeQuantity("decrease", cartItem)}
+                              onClick={() =>
+                                handleChangeQuantity("decrease", cartItem)
+                              }
                             >
                               -
                             </button>
@@ -142,15 +147,21 @@ export default function CartDropdown() {
                               maxlength="2"
                               pattern="[0-9]*"
                               value={cartItem.quantity}
-                              onChange={event =>
-                                handleChangeQuantity("update", cartItem, event.target.value)
+                              onChange={(event) =>
+                                handleChangeQuantity(
+                                  "update",
+                                  cartItem,
+                                  event.target.value
+                                )
                               }
                             />
                             <button
                               className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg disabled:bg-[#0000000a] disabled:cursor-not-allowed ${
                                 isLoading ? "pointer-events-none" : ""
                               }`}
-                              onClick={() => handleChangeQuantity("increase", cartItem)}
+                              onClick={() =>
+                                handleChangeQuantity("increase", cartItem)
+                              }
                             >
                               +
                             </button>
