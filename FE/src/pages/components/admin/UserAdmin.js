@@ -1,7 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { Popconfirm, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import { createApiPjc } from "../../../services";
+import { createApiAdmin } from "../../../services/admin-service";
 import CreateUser from "./CreateUser";
 import EditUser from "./EditUser";
 
@@ -9,7 +9,7 @@ const UserAdmin = () => {
   const [user, setUser] = useState([]);
   const toast = useToast();
   useEffect(() => {
-    createApiPjc()
+    createApiAdmin()
       .get("http://localhost:8000/user")
       .then((response) => setUser(response.data.user))
       .catch((error) => console.error("Error:", error));

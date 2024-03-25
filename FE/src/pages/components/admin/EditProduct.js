@@ -1,8 +1,8 @@
 import { useToast } from "@chakra-ui/react";
 import { Button, Form, Input, Modal, Select } from "antd";
 import React, { useEffect, useState } from "react";
-import { createApiPjc } from "../../../services";
-import { getProductById } from "../../services";
+import { createApiAdmin } from "../../../services/admin-service";
+import { getProductById } from "../../../services/admin-service";
 
 const EditProduct = (id) => {
   const [open, setOpen] = useState(false);
@@ -48,7 +48,7 @@ const EditProduct = (id) => {
   const onFinish = async (values) => {
     console.log(values);
     try {
-      const result = await createApiPjc().put(
+      const result = await createApiAdmin().put(
         `http://localhost:8000/admin/product/${id.id}`,
         {
           name: values.name,

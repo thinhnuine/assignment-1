@@ -8,7 +8,7 @@ import { useUser } from "../../UserContext";
 import emptyCartSvg from "../../assets/images/cart_empty.svg";
 import axios, { AxiosError } from "axios";
 import CartDropdown from "./CartDropdown";
-
+import { createApiUser } from "../../services/user-service";
 export default function Cart() {
   const { user, updateUser } = useUser();
 
@@ -19,19 +19,13 @@ export default function Cart() {
 
   const changeQuantity = async (variantId, quantity) => {
     try {
-      const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
       setIsLoading(true);
-      const response = await axios.put(
+      const response = await createApiUser().put(
         "http://localhost:8000/user/cart",
         {
           variant: variantId,
           quantity,
           action: "changeQuantity",
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
         }
       );
 
@@ -42,7 +36,9 @@ export default function Cart() {
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        message.error(error.response.data?.message || "Cập nhật giỏ hàng thất bại");
+        message.error(
+          error.response.data?.message || "Cập nhật giỏ hàng thất bại"
+        );
       } else {
         message.error(error?.message);
       }
@@ -69,10 +65,9 @@ export default function Cart() {
     } else {
       changeQuantity(cartItem.variant, newQuantity);
     }
-
   };
 
-  const hanelRemoveCartItem = async cartItem => {
+  const hanelRemoveCartItem = async (cartItem) => {
     try {
       const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
       setIsLoading(true);
@@ -125,9 +120,10 @@ export default function Cart() {
                     </tr>
                   </thead>
                   <tbody>
-                    {cartDetails.map(cartItem => {
+                    {cartDetails.map((cartItem) => {
                       const priceAProduct =
-                        cartItem.priceDetail.price * ((100 - cartItem.priceDetail.saleRatio) / 100);
+                        cartItem.priceDetail.price *
+                        ((100 - cartItem.priceDetail.saleRatio) / 100);
 
                       return (
                         <tr
@@ -155,7 +151,9 @@ export default function Cart() {
                                 <div className="action-remove">
                                   <button
                                     className="font-light text-[#ff0000] text-[13px] inline"
-                                    onClick={() => hanelRemoveCartItem(cartItem)}
+                                    onClick={() =>
+                                      hanelRemoveCartItem(cartItem)
+                                    }
                                   >
                                     Xoá
                                   </button>
@@ -170,31 +168,48 @@ export default function Cart() {
                             <div className="flex justify-center text-sm">
                               <button
                                 type="button"
-                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${isLoading ? "pointer-events-none" : ""}`}
-                                onClick={() => handleChangeQuantity("decrease", cartItem)}
+                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${
+                                  isLoading ? "pointer-events-none" : ""
+                                }`}
+                                onClick={() =>
+                                  handleChangeQuantity("decrease", cartItem)
+                                }
                               >
                                 -
                               </button>
                               <input
                                 type="text"
-                                className={`rounded-none border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b ${isLoading ? "pointer-events-none" : ""}`}
+                                className={`rounded-none border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b ${
+                                  isLoading ? "pointer-events-none" : ""
+                                }`}
                                 maxlength="2"
                                 pattern="[0-9]*"
                                 value={cartItem.quantity}
-                                onChange={event =>
-                                  handleChangeQuantity("update", cartItem, event.target.value)
+                                onChange={(event) =>
+                                  handleChangeQuantity(
+                                    "update",
+                                    cartItem,
+                                    event.target.value
+                                  )
                                 }
                               />
                               <button
-                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${isLoading ? "pointer-events-none" : ""}`}
-                                onClick={() => handleChangeQuantity("increase", cartItem)}
+                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${
+                                  isLoading ? "pointer-events-none" : ""
+                                }`}
+                                onClick={() =>
+                                  handleChangeQuantity("increase", cartItem)
+                                }
                               >
                                 +
                               </button>
                             </div>
                           </td>
                           <td className="text-center py-2 text-[#ff0000] font-bold text-sm">
-                            {formatCurrencyInVnd(priceAProduct * cartItem.quantity)}đ
+                            {formatCurrencyInVnd(
+                              priceAProduct * cartItem.quantity
+                            )}
+                            đ
                           </td>
                         </tr>
                       );
@@ -219,7 +234,11 @@ export default function Cart() {
               </>
             ) : (
               <div className="flex flex-col justify-center items-center gap-3">
-                <img src={emptyCartSvg} alt="empty cart" className="w-24 h-24" />
+                <img
+                  src={emptyCartSvg}
+                  alt="empty cart"
+                  className="w-24 h-24"
+                />
                 <span>Không có sản phẩm nào trong giỏ hàng của bạn</span>
               </div>
             )}

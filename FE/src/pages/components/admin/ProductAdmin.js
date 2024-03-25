@@ -1,8 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { Pagination, Popconfirm, Space, Table } from "antd";
 import { useEffect, useState } from "react";
-import { createApiPjc } from "../../../services";
-import { getProduct } from "../../services";
+import { createApiAdmin, getProduct } from "../../../services/admin-service";
 import CreateProduct from "./CreateProduct";
 import CreateVariant from "./CreateVariant";
 import EditProduct from "./EditProduct";
@@ -38,7 +37,7 @@ const ManageProduct = () => {
   };
   const handleDeleteVariant = async (variantId) => {
     try {
-      await createApiPjc().delete(
+      await createApiAdmin().delete(
         `http://localhost:8000/admin/variant/${variantId}`
       );
       setProducts((prevOrders) =>
@@ -60,7 +59,7 @@ const ManageProduct = () => {
   };
   const handleDeleteOrder = async (orderId) => {
     try {
-      await createApiPjc().delete(
+      await createApiAdmin().delete(
         `http://localhost:8000/admin/product/${orderId}`
       );
       setProducts((prevOrders) =>

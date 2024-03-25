@@ -1,6 +1,6 @@
 // UserContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { createApiPjc } from "./services";
+import { createApiAdmin } from "./services/admin-service";
 
 const UserContext = createContext();
 
@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
     try {
       const a = !!localStorage.getItem("user");
       console.log(a);
-      const response = await createApiPjc().get(
+      const response = await createApiAdmin().get(
         "http://localhost:8000/user/get-current"
       );
       if (response.data.success) {

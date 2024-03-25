@@ -6,9 +6,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { message } from "antd";
 import { useUser } from "../../../UserContext";
-
+import { createApiUser } from "../../../services/user-service";
 export default function SimilarProducts() {
-  const { updateUser } = useUser()
+  const { updateUser } = useUser();
 
   const [productData, setProductData] = useState([]);
 
@@ -17,27 +17,22 @@ export default function SimilarProducts() {
     if (!isAuthenticated) {
       return alert("Bạn phải đăng nhập trước");
     }
-    const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
+
     const addToCart = async () => {
-      const variantId = productItem.variants[0]._id
+      const variantId = productItem.variants[0]._id;
       try {
-        const response = await axios.put(
+        const response = await createApiUser().put(
           "http://localhost:8000/user/cart",
           {
             variant: variantId,
             quantity: 1,
-            action: 'addToCart'
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
+            action: "addToCart",
           }
         );
         console.log(response);
         if (response.data.success) {
           // Xử lý sau khi thêm vào giỏ hàng thành công (nếu cần)
-          message.success("Thêm vào giỏ hàng thành công")
+          message.success("Thêm vào giỏ hàng thành công");
         } else {
           console.error("Có lỗi khi thêm vào giỏ hàng:", response.message);
         }
@@ -48,7 +43,6 @@ export default function SimilarProducts() {
     };
 
     addToCart();
-
   };
 
   useEffect(() => {

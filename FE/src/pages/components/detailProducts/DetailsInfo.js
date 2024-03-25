@@ -3,7 +3,7 @@ import { Button, message } from "antd";
 import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../../UserContext";
-import { createApiPjc } from "../../../services";
+import { createApiAdmin } from "../../../services/admin-service";
 import "./DetailsInfo.css";
 
 const DetailsInfo = (data) => {
@@ -35,12 +35,12 @@ const DetailsInfo = (data) => {
     const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
     const addToCart = async () => {
       try {
-        const response = await createApiPjc().put(
+        const response = await createApiAdmin().put(
           "http://localhost:8000/user/cart",
           {
             variant: selectedVariant._id,
             quantity,
-            action: 'addToCart'
+            action: "addToCart",
           },
           {
             headers: {
@@ -50,15 +50,17 @@ const DetailsInfo = (data) => {
         );
         if (response.data.success) {
           // Xử lý sau khi thêm vào giỏ hàng thành công (nếu cần)
-          message.success("Thêm vào giỏ hàng thành công")
+          message.success("Thêm vào giỏ hàng thành công");
         } else {
-          throw new Error(response?.message || "Thêm vào giỏ hàng không thành công")
+          throw new Error(
+            response?.message || "Thêm vào giỏ hàng không thành công"
+          );
         }
       } catch (error) {
         if (error instanceof AxiosError) {
-          message.error(error.response.data?.message)
+          message.error(error.response.data?.message);
         } else {
-          message.error(error?.message)
+          message.error(error?.message);
         }
       }
       updateUser();
@@ -74,7 +76,7 @@ const DetailsInfo = (data) => {
   useEffect(() => {
     setSalePrice(
       data.productById.priceDetail.price *
-      ((100 - data.productById.priceDetail.saleRatio) / 100)
+        ((100 - data.productById.priceDetail.saleRatio) / 100)
     );
     isSoldCheck();
   }, []);
@@ -105,7 +107,7 @@ const DetailsInfo = (data) => {
     return false;
   });
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   const inQuantity = () => {
     if (quantity < 999) {

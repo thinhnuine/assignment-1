@@ -1,7 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { Button, Form, Input, Modal, Select } from "antd";
 import React, { useState } from "react";
-import { createApiPjc } from "../../../services";
+import { createApiAdmin } from "../../../services/admin-service";
 
 const CreateProduct = () => {
   const [open, setOpen] = useState(false);
@@ -26,7 +26,7 @@ const CreateProduct = () => {
 
   const onFinish = async (values) => {
     try {
-      const result = await createApiPjc().post(
+      const result = await createApiAdmin().post(
         `http://localhost:8000/admin/product/${values.category}`,
         {
           name: values.name,

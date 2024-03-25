@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, Form, Input, InputNumber } from "antd";
 import Footer from "./Home/Footer";
 import Header from "./Home/Header";
-import { createApiPjc } from "../services";
+import { createApiAdmin } from "../services/admin-service";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/",
@@ -20,86 +20,13 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 const Profile = () => {
-  // const email = JSON.parse(localStorage.getItem("user"));
-
-  // const [user, setUser] =useState([]);
-  // const [form] = Form.useForm();
-
-  //lan1
-
-  //   useEffect(() => {
-  //     axios
-  //       .get("http://localhost:8000/user/653a23afa2e8f6969e54bb9e")
-  //       .then((response) => {
-  //         setUser(response.data.user);
-
-  //       })
-  //       .catch((error) => {
-  //         console.error("Lỗi khi lấy được thông tin người dùng:", error);
-  //       });
-  //       // form.setFieldValue("username", user.username);
-  //   }, []);
-  //  console.log(user);
-  //  const getUser =  (user) => {
-  //   try {
-
-  //     form.setFieldValue("username", user.username);
-  //     form.setFieldValue("birth_year", user.birth_year);
-  //     form.setFieldValue("email", user.email);
-  //     form.setFieldValue("phone", user.phone);
-
-  //   } catch (error) {
-  //     // console.log(error);
-  //   }
-  // };
-  //  useEffect(()=>{
-
-  //   getUser(user);
-  //  },[])
-
-  //  console.log(user);
-
-  //lan2
-
-  // useEffect(() => {
-  //   const storedUser = JSON.parse(localStorage.getItem("user"));
-  //   if (storedUser) {
-  //     setUser(storedUser);
-  //     form.setFieldsValue({
-  //       username: storedUser.username,
-  //       birth_year: storedUser.birth_year,
-  //       email: storedUser.email,
-  //       phone: storedUser.phone,
-  //     });
-  //   } else {
-  //     axios
-  //       .get("http://localhost:8000/user/:id")
-  //       .then((response) => {
-  //         const userData = response.data.user;
-  //         setUser(userData);
-  //         form.setFieldsValue({
-  //           username: userData.username,
-  //           birth_year: userData.birth_year,
-  //           email: userData.email,
-  //           phone: userData.phone,
-  //         });
-  //         localStorage.setItem("user", JSON.stringify(userData));
-  //       })
-  //       .catch((error) => {
-  //         console.error("Lỗi khi lấy được thông tin người dùng:", error);
-  //       });
-  //   }
-  // }, []);
-
-  //lan3
-
   const [user, setUser] = useState({}); // Sử dụng useState để lưu thông tin người dùng
 
   const [form] = Form.useForm();
 
   useEffect(() => {
     const { id } = JSON.parse(localStorage.getItem("user"));
-    createApiPjc()
+    createApiAdmin()
       .get(`http://localhost:8000/user/${id}`) // Thay :id bằng id thực tế của user
       .then((response) => {
         const userData = response.data.user;
@@ -118,38 +45,6 @@ const Profile = () => {
         console.error("Lỗi khi lấy được thông tin người dùng:", error);
       });
   }, [form]);
-
-  //PUT
-  // const handleUpdate = (values) => {
-  //   const { username, email, birth_year, phone } = values; // Extract values from the form
-
-  //   const { id } = JSON.parse(localStorage.getItem("user")); // Get the user ID from localStorage
-
-  //   const updatedUserData = {
-  //     username,
-  //     email,
-  //     birth_year,
-  //     phone,
-  //     // Include other fields if needed
-  //   };
-
-  //   axios
-  //     .put(`http://localhost:8000/user/${id}`, updatedUserData)
-  //     .then((response) => {
-  //       console.log("User data updated successfully:", response.data);
-  //       // Handle success, update state or perform other actions upon successful update
-  //       alert('Update thành công!')
-  //       const token = localStorage.getItem('token');
-  //   console.log(token)
-  //   if (token) {
-  //       response.headers.Authorization = `Bearer ${token}`}
-  //       return response;
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error updating user data:", error);
-  //       // Handle error cases upon unsuccessful update
-  //     });
-  // };
 
   const layout = {
     labelCol: {
@@ -187,7 +82,7 @@ const Profile = () => {
       // Include other fields if needed
     };
 
-    createApiPjc()
+    createApiAdmin()
       .get(`http://localhost:8000/user/${id}`, updatedUserData)
       .then((response) => {
         console.log("User data updated successfully:", response.data);
