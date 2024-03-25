@@ -2,7 +2,7 @@ const productModel = require("../../models/Product.js");
 const joi = require("joi");
 const variantModel = require("../../models/Variant.js");
 const categoryModel = require("../../models/Category.js");
-const { productSchema, variantSchema } = require("./validation.js");
+const { productSchema, variantSchema } = require("./Validation.js");
 const orderModel = require("../../models/Order.js");
 
 const getAllProduct = async (req, res) => {
@@ -79,15 +79,15 @@ const getProductById = async (req, res) => {
     }
     const productCheck = await productModel.findById(productId)
     if (!productCheck) {
-    return res
+      return res
         .status(200)
         .json({ status: "error", message: "Sản phẩm không tồn tại" });
     }
     const product = await productModel
       .findById(productId)
       .populate("category")
-      .populate("variants");https://meet.google.com/aqu-itqt-dvr
-    
+      .populate("variants"); https://meet.google.com/aqu-itqt-dvr
+
 
     return res.status(200).json({ product });
   } catch (error) {

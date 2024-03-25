@@ -23,22 +23,22 @@ const login = async (req, res) => {
   try {
     const { password, email } = req.body;
 
-    const emailExist = await Users.findOne({ email });
+    const emailExist = await Users.findOne({ email })
     const userName = emailExist?.userName;
     if (!emailExist) {
       return res.status(400).json("Người dùng không tồn tại");
     }
 
-    const checkPassword = bcrypt.compareSync(password, emailExist.password);
+    const checkPassword = bcrypt.compareSync(password, emailExist.password)
     if (!checkPassword) {
       return res.status(400).json("Sai mật khẩu");
     }
 
     //create access token,refresh token
-    const accessToken = generateAccessToken(emailExist._id);
-    const refreshToken = generateRefreshToken(emailExist._id);
+    const accessToken = generateAccessToken(emailExist._id)
+    const refreshToken = generateRefreshToken(emailExist._id)
 
-    console.log(accessToken);
+    console.log(accessToken)
     await Users.findByIdAndUpdate(emailExist._id, { refreshToken });
 
     return res.status(201).json({
@@ -47,12 +47,12 @@ const login = async (req, res) => {
       role: emailExist.role,
       userName: userName,
       accessToken: accessToken,
-      refreshToken: refreshToken,
-    });
+      refreshToken: refreshToken
+    })
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message })
   }
-};
+}
 const loginAdmin = async (req, res) => {
   try {
     const { password, email } = req.body;
@@ -330,7 +330,7 @@ const getUserById = async (req, res) => {
       user: result,
       status: "success",
     });
-  } catch (error) {}
+  } catch (error) { }
 };
 
 // Hàm tính tổng tiền từ danh sách sản phẩm trong giỏ hàng
@@ -346,12 +346,14 @@ async function calculateTotalPrice(cartDetail) {
     if (!variant.priceDetail.saleRatio) {
       const price = variant.priceDetail.price * item.quantity;
       if (!isNaN(price)) {
-        totalPrice += Math.round(price);
+        // totalPrice += Math.round(price);
+        totalPrice += price;
       }
     } else {
       const price = variant.priceDetail.priceAfterSale * item.quantity;
       if (!isNaN(price)) {
-        totalPrice += Math.round(price / 1000) * 1000;
+        // totalPrice += [Math.round(price / 1000) * 1000];
+        totalPrice += price;
       }
     }
   }
@@ -360,25 +362,38 @@ async function calculateTotalPrice(cartDetail) {
 }
 
 const updateCart = async (req, res) => {
-  const { _id } = req.user._id;
-  const { variant, quantity } = req.body;
+  const userId = req.user._id?.toString();
+  const { variant, quantity, action } = req.body;
+
   if (!variant) {
     return res.status(200).json({ status: "error", message: "Missing inputs" });
   }
 
   const variantEle = await variantModel.findById(variant);
+
+
   // Check sản phẩm order có nhiều hơn sản phẩm trong kho hay không?
   if (variantEle.countInStock >= quantity) {
-    const user = await userModel.findById(_id).select("cart");
-    // console.log(user?.cart);
+    const user = req.user;
+
+    // Check xem mặt hàng đã có trong giỏ hàng chưa?
     const alreadyVariant = user?.cart?.cartDetail?.find(
-      (ele) => ele.variant.toString() === variant
+      (ele) => {
+        return ele.variant.toString() === variant && ele?.color?.toString() === variantEle?.color && ele?.size?.toString() === variantEle?.size
+      }
     );
-    // console.log(alreadyVariant);
+
     if (alreadyVariant) {
+      // Nếu đã có mặt hàng này trong giỏ hàng
+      let update = { $inc: { "cart.cartDetail.$.quantity": quantity } };
+
+      if (action === 'changeQuantity') {
+        update = { $set: { "cart.cartDetail.$.quantity": quantity } }
+      }
+
       const response = await userModel.findOneAndUpdate(
-        { _id, "cart.cartDetail.variant": variant },
-        { $set: { "cart.cartDetail.$.quantity": quantity } },
+        { _id: userId, "cart.cartDetail.variant": variant, "cart.cartDetail.color": variantEle?.color, "cart.cartDetail.size": variantEle?.size },
+        update,
         { new: true }
       );
 
@@ -392,15 +407,20 @@ const updateCart = async (req, res) => {
         totalPrice: totalPrice,
       });
     } else {
-      console.log(variant);
+      // Nếu chưa có mặt hàng này trong giỏ hàng
+      const productId = variantEle?.productId?.toString();
+
+
+      const cartDetail = { variant, quantity, productId, color: variantEle?.color, size: variantEle?.size, image: variantEle?.image, name: variantEle?.name, priceDetail: { ...variantEle.priceDetail } }
+
       const response = await User.findByIdAndUpdate(
-        _id,
+        userId,
         {
           $push: {
-            "cart.cartDetail": { variant: variant, quantity: quantity },
-          },
+            "cart.cartDetail": cartDetail
+          }
         },
-        { new: true }
+        { new: true, upsert: true }
       );
 
       const totalPrice = await calculateTotalPrice(response.cart.cartDetail);
@@ -415,18 +435,18 @@ const updateCart = async (req, res) => {
   } else {
     return res
       .status(400)
-      .json({ message: "Không thể them quá số lượng sản phẩm có sẵn" });
+      .json({ message: "Không thể thêm quá số lượng sản phẩm có sẵn" });
   }
 };
 
 const removeVariantInCart = async (req, res) => {
-  const { _id } = req.user;
+  const userId = req.user._id?.toString();
   const variant = req.params.id;
   if (!variant) {
-    res.status(200).json({ mes: "Missing variant, ID" });
+    res.status(200).json({ mes: "Missing variant ID" });
   }
   try {
-    const user = await userModel.findById(_id).select("cart");
+    const user = req.user;
     const alreadyVariant = user?.cart?.cartDetail?.find(
       (ele) => ele.variant.toString() === variant
     );
@@ -439,8 +459,8 @@ const removeVariantInCart = async (req, res) => {
     }
 
     const response = await userModel.findByIdAndUpdate(
-      _id,
-      { $pull: { "cart.cartDetail": { variant: variant } } },
+      userId,
+      { $pull: { "cart.cartDetail": { variant: variant, } } },
       { new: true }
     );
 

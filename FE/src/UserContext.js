@@ -33,7 +33,7 @@ export const UserProvider = ({ children }) => {
   }, []); // Gọi một lần khi component mount và logic đăng nhập thay đổi
 
   return (
-    <UserContext.Provider value={{ setUser, isLoggedIn, updateUser }}>
+    <UserContext.Provider value={{ setUser, isLoggedIn, updateUser, user }}>
       {children}
     </UserContext.Provider>
   );

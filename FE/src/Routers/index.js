@@ -4,7 +4,7 @@ import Home from "../pages/Home/Home";
 import Login from "../pages/Login_Register/Login";
 import Register from "../pages/Login_Register/Register";
 import Profile from "../pages/Profile";
-import Card from "../pages/Home/Cart";
+import Cart from "../pages/Home/Cart";
 import Shop from "../pages/Home/Shop";
 import Admin from "../pages/Home/Admin";
 import Detail from "../pages/Home/Detail";
@@ -44,7 +44,7 @@ const Routers = () => {
         {/* <Route path="/admin/login" element={<Login />} /> */}
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/cart" element={<Card />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/detail/:id" element={<Detail />} />
         {/* <Route path="/admin" element={<Admin />} />  */}
