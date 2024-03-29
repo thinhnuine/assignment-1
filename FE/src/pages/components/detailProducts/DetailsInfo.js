@@ -75,8 +75,8 @@ const DetailsInfo = (data) => {
 
   useEffect(() => {
     setSalePrice(
-      data.productById.priceDetail.price *
-        ((100 - data.productById.priceDetail.saleRatio) / 100)
+      data?.productById?.priceDetail?.price *
+        ((100 - data?.productById?.priceDetail?.saleRatio) / 100)
     );
     isSoldCheck();
   }, []);

@@ -122,8 +122,8 @@ export default function Cart() {
                   <tbody>
                     {cartDetails.map((cartItem) => {
                       const priceAProduct =
-                        cartItem.priceDetail.price *
-                        ((100 - cartItem.priceDetail.saleRatio) / 100);
+                        cartItem.priceDetail?.price *
+                        ((100 - cartItem?.priceDetail?.saleRatio) / 100);
 
                       return (
                         <tr

@@ -6,7 +6,7 @@ import emptyCartSvg from "../../assets/images/cart_empty.svg";
 import { formatCurrencyInVnd } from "../../helper";
 import { Link } from "react-router-dom";
 import "./CartDropdown.css";
-import {createApiUser} from '../../services/user-service'
+import { createApiUser } from "../../services/user-service";
 export default function CartDropdown() {
   const { user, updateUser } = useUser();
 
@@ -98,8 +98,8 @@ export default function CartDropdown() {
             <div className="cart-list-item h-auto md:max-h-96 overflow-y-auto px-3 pt-3">
               {cartDetails.map((cartItem) => {
                 const priceAProduct =
-                  cartItem.priceDetail.price *
-                  ((100 - cartItem.priceDetail.saleRatio) / 100);
+                  cartItem?.priceDetail?.price *
+                  ((100 - cartItem?.priceDetail?.saleRatio) / 100);
                 return (
                   <div className="cart-item flex justify-between gap-3 border-b border-[#ebebeb] pb-3 mb-3">
                     <div className="product-image flex-shrink-0">

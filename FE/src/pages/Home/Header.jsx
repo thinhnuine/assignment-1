@@ -42,18 +42,23 @@ const Header = () => {
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify({ email: userName, password }), // body data type must match "Content-Type" header
-    }).then((res) =>
-      res.json().then((data) => {
-        if (data.email === userName) {
-          localStorage.setItem("user", JSON.stringify(data));
-          setHandleModal(!handleModal);
-          navigate("/");
-          message.success("Đăng nhập thành công!");
-        } else {
-          message.error("Tài khoản hoặc mật khẩu sai!");
-        }
-      })
-    );
+    })
+      .then((res) =>
+        res.json().then((data) => {
+          if (data.email === userName) {
+            localStorage.setItem("user", JSON.stringify(data));
+            setHandleModal(!handleModal);
+            navigate("/");
+            message.success("Đăng nhập thành công!");
+          } else {
+            message.error("Tài khoản hoặc mật khẩu sai!");
+          }
+        })
+      )
+      .catch((error) => {
+        message.error("Tài khoản hoặc mật khẩu sai!");
+        console.error(error);
+      });
     updateUser();
   };
 
@@ -176,7 +181,7 @@ const Header = () => {
           <Drawer
             title="Menu"
             placement={"left"}
-            closable={false}
+            closable
             onClose={() => {
               setMenuMobile(false);
             }}

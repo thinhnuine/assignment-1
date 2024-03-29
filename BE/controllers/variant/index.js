@@ -46,10 +46,11 @@ const createVariant = async (req, res) => {
       return res.status(400).jon({ error: validate.error.message });
     }
     console.log(priceDetail.price);
-    if (priceDetail.saleRatio) {
+    if (priceDetail?.saleRatio) {
       Math.round(
         (priceDetail.priceAfterSale =
-          (priceDetail.price * (1 - priceDetail.saleRatio / 100) * 1000) / 1000)
+          (priceDetail?.price * (1 - priceDetail?.saleRatio / 100) * 1000) /
+          1000)
       );
       console.log(priceDetail.priceAfterSale);
     }
@@ -68,7 +69,7 @@ const createVariant = async (req, res) => {
     await product.save();
     product.countInStock += newVariant.countInStock;
     console.log(product.countInStock);
-    await updatePriceDetailProduct(productId)
+    await updatePriceDetailProduct(productId);
     await product.save();
     return res.status(201).json({
       variant: newVariant,
@@ -150,8 +151,8 @@ const updateVariant = async (req, res) => {
       }
       if (priceDetail?.saleRatio) {
         priceDetail.priceAfterSale =
-          priceDetail.price * (1 - priceDetail.saleRatio / 100);
-        console.log(priceDetail.priceAfterSale);
+          priceDetail?.price * (1 - priceDetail?.saleRatio / 100);
+        console.log(priceDetail?.priceAfterSale);
       }
     }
 
@@ -195,10 +196,10 @@ const deleteVariant = async (req, res) => {
     });
     // trừ sản phẩm trong product
     product.countInStock -= variant.countInStock;
-    await product.variants.pull(variantId)
+    await product.variants.pull(variantId);
     await product.save();
     console.log(product._id);
-    await updatePriceDetailProduct(product._id)
+    await updatePriceDetailProduct(product._id);
     return res.status(200).json({ message: "Xoa san pham thanh cong" });
   } catch (error) {
     console.log(error);
@@ -219,8 +220,7 @@ const updatePriceDetailProduct = async (productId) => {
 
       console.log(product.priceDetail);
       product.save();
-    }else{
-
+    } else {
       product.priceDetail = {};
       product.save();
     }

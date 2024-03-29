@@ -1,25 +1,11 @@
 import { Button, message } from "antd";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([]);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-
-  // useEffect(() => {
-  //   fetch("https://6485ce2fa795d24810b75652.mockapi.io/api/v1/array-user")
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       console.log(data);
-
-  //       // setUser(data);
-  //       setData(data);
-  //     });
-  // }, []);
 
   const handleLogin = () => {
     const response = fetch("http://localhost:8000/admin/login", {

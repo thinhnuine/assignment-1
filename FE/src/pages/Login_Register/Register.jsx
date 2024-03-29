@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { Button } from "antd";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./assets/CSS/Register.css";
-import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
 
   const [user, setUser] = useState([]);
 
@@ -115,61 +113,86 @@ const Register = () => {
 
   return (
     <div>
-      <div className="register">
-        <h1>Đăng ký</h1>
-        <p>Vui lòng điền thông tin để đăng ký</p>
-        <hr />
+      <div>
+        <div className="login container mt-20 max-w-[700px]">
+          <h1 className="text-xl font-bold">Đăng ký</h1>
+          <hr className="mt-4" />
+          <label htmlFor="username" className="mt-3">
+            <b>Tên đăng nhập</b>
+          </label>
+          <input
+            style={{
+              width: "100%",
+              padding: "15px",
+              margin: "10px 0 22px 0",
+              display: "inline-block",
+              border: "none",
+              background: "#ffffff",
+              backgroundColor: "#ddd",
+              outline: "none",
+            }}
+            onChange={(event) => setUserName(event.target.value)}
+            type="text"
+            placeholder="Mời nhập tên tài khoản"
+            name="username"
+            id="username"
+          />
+          <label htmlFor="password">
+            <b>Mật khẩu</b>
+          </label>
+          <input
+            style={{
+              width: "100%",
+              padding: "15px",
+              margin: "10px 0 22px 0",
+              display: "inline-block",
+              border: "none",
+              background: "#ffffff",
+              backgroundColor: "#ddd",
+              outline: "none",
+            }}
+            onChange={(event) => setPassword(event.target.value)}
+            type="password"
+            placeholder="******"
+            name="password"
+            id="password"
+          />
+          <label htmlFor="password">
+            <b>Nhập lại mật khẩu</b>
+          </label>
+          <input
+            style={{
+              width: "100%",
+              padding: "15px",
+              margin: "10px 0 22px 0",
+              display: "inline-block",
+              border: "none",
+              background: "#ffffff",
+              backgroundColor: "#ddd",
+              outline: "none",
+            }}
+            onChange={(event) => setPassword2(event.target.value)}
+            type="password"
+            placeholder="******"
+            name="password"
+            id="password"
+          />
+          <hr />
+          <p className="mt-1">
+            Để tạo tài khoản vui lòng đồng ý với điều khoản của chúng tôi{" "}
+            <a href="#">Terms &amp; Privacy</a>.
+          </p>
 
-        <label htmlFor="username">
-          <b>Tên đăng nhập</b>
-        </label>
-        <input
-          value={userName}
-          onChange={(event) => setUserName(event.target.value)}
-          type="text"
-          placeholder="Mời nhập tên tài khoản"
-          name="username"
-          id="username"
-        />
-
-        <label htmlFor="password">
-          <b>Mật khẩu</b>
-        </label>
-        <input
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          type="password"
-          placeholder="******"
-          name="password"
-          id="password"
-        />
-
-        <label htmlFor="password-repeat">
-          <b>Nhập lại mật khẩu</b>
-        </label>
-        <input
-          value={password2}
-          onChange={(event) => setPassword2(event.target.value)}
-          type="password"
-          placeholder="******"
-          name="password-repeat"
-          id="password-repeat"
-        />
-
-        <hr />
-        {/* <p>
-          Để tạo tài khoản vui lòng đồng ý với điều khoản của chúng tôi{" "}
-          <a href="#">Terms &amp; Privacy</a>.
-        </p> */}
-
-        <button onClick={handleAddUser} type="submit" className="submit">
-          Đăng ký
-        </button>
-      </div>
-      <div className="register-login">
-        <p>
-          Bạn đã có tài khoản rồi? <Link to="/login">Đăng nhập</Link>.
-        </p>
+          <Button
+            onClick={handleAddUser}
+            htmlType="submit"
+            size="large"
+            className="bg-green-500 mt-2 w-full"
+            type="primary"
+          >
+            Đăng ký
+          </Button>
+        </div>
       </div>
     </div>
   );

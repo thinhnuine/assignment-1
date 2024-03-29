@@ -68,28 +68,30 @@ const Shop = () => {
             )
             .map((data) => (
               <div className="containerz" key={data.id}>
-                <img src={data.thumbnail} alt="#" />
+                <div className="flex justify-center">
+                  <img src={data.thumbnail} alt="#" className="w-[70%]" />
+                </div>
                 <Link to={`/detail/${data._id}`}>
-                  {" "}
-                  <p>{data.name}</p>
+                  <p className="lg:text-lg text-base">{data.name}</p>
                 </Link>
-                <p className="name">{data.category.name}</p>
-                <div className="price-math">
-                  <h4>
-                    {(data.priceDetail &&
-                      formatNumber(
-                        data.priceDetail.price *
-                          ((100 - data.priceDetail.saleRatio) / 100)
-                      )) ||
-                      "0"}
-                    đ
-                  </h4>
-                  {data.priceDetail && (
-                    <del className="delete">{data.priceDetail.price}đ</del>
-                  )}
-                  {/* <span className="cart-icon">
-                    <AiOutlineShoppingCart />
-                  </span> */}
+                {/* <p className="name">{data.category.name}</p> */}
+                <div className="flex justify-center">
+                  <div className="flex justify-between w-[70%] flex-col xl:flex-row">
+                    <h4 className="lg:text-xl">
+                      {(data.priceDetail &&
+                        formatNumber(
+                          data.priceDetail?.price *
+                            ((100 - data?.priceDetail?.saleRatio) / 100)
+                        )) ||
+                        "0"}
+                      đ
+                    </h4>
+                    {data.priceDetail && (
+                      <del className="delete lg:text-xl">
+                        {data?.priceDetail?.price}đ
+                      </del>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

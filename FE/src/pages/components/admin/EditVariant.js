@@ -36,7 +36,7 @@ const EditVariant = (id) => {
       form.setFieldValue("price", variant.data.variant.priceDetail.price);
       form.setFieldValue(
         "saleRatio",
-        variant.data.variant.priceDetail.saleRatio
+        variant.data.variant.priceDetail?.saleRatio
       );
       form.setFieldValue("color", variant.data.variant.color);
       form.setFieldValue("size", variant.data.variant.size);
@@ -55,7 +55,7 @@ const EditVariant = (id) => {
           image: values.image,
           priceDetail: {
             price: values.price,
-            saleRatio: values.saleRatio,
+            saleRatio: values?.saleRatio,
           },
           color: values.color,
           size: values.size,

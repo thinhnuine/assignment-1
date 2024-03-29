@@ -23,22 +23,22 @@ const login = async (req, res) => {
   try {
     const { password, email } = req.body;
 
-    const emailExist = await Users.findOne({ email })
+    const emailExist = await Users.findOne({ email });
     const userName = emailExist?.userName;
     if (!emailExist) {
       return res.status(400).json("Người dùng không tồn tại");
     }
 
-    const checkPassword = bcrypt.compareSync(password, emailExist.password)
+    const checkPassword = bcrypt.compareSync(password, emailExist.password);
     if (!checkPassword) {
       return res.status(400).json("Sai mật khẩu");
     }
 
     //create access token,refresh token
-    const accessToken = generateAccessToken(emailExist._id)
-    const refreshToken = generateRefreshToken(emailExist._id)
+    const accessToken = generateAccessToken(emailExist._id);
+    const refreshToken = generateRefreshToken(emailExist._id);
 
-    console.log(accessToken)
+    console.log(accessToken);
     await Users.findByIdAndUpdate(emailExist._id, { refreshToken });
 
     return res.status(201).json({
@@ -47,12 +47,12 @@ const login = async (req, res) => {
       role: emailExist.role,
       userName: userName,
       accessToken: accessToken,
-      refreshToken: refreshToken
-    })
+      refreshToken: refreshToken,
+    });
   } catch (error) {
-    return res.status(400).json({ message: error.message })
+    return res.status(400).json({ message: error.message });
   }
-}
+};
 const loginAdmin = async (req, res) => {
   try {
     const { password, email } = req.body;
@@ -330,7 +330,7 @@ const getUserById = async (req, res) => {
       user: result,
       status: "success",
     });
-  } catch (error) { }
+  } catch (error) {}
 };
 
 // Hàm tính tổng tiền từ danh sách sản phẩm trong giỏ hàng
@@ -343,7 +343,7 @@ async function calculateTotalPrice(cartDetail) {
       .findById(item.variant)
       .select("priceDetail");
 
-    if (!variant.priceDetail.saleRatio) {
+    if (!variant.priceDetail?.saleRatio) {
       const price = variant.priceDetail.price * item.quantity;
       if (!isNaN(price)) {
         // totalPrice += Math.round(price);
@@ -371,28 +371,34 @@ const updateCart = async (req, res) => {
 
   const variantEle = await variantModel.findById(variant);
 
-
   // Check sản phẩm order có nhiều hơn sản phẩm trong kho hay không?
   if (variantEle.countInStock >= quantity) {
     const user = req.user;
 
     // Check xem mặt hàng đã có trong giỏ hàng chưa?
-    const alreadyVariant = user?.cart?.cartDetail?.find(
-      (ele) => {
-        return ele.variant.toString() === variant && ele?.color?.toString() === variantEle?.color && ele?.size?.toString() === variantEle?.size
-      }
-    );
+    const alreadyVariant = user?.cart?.cartDetail?.find((ele) => {
+      return (
+        ele.variant.toString() === variant &&
+        ele?.color?.toString() === variantEle?.color &&
+        ele?.size?.toString() === variantEle?.size
+      );
+    });
 
     if (alreadyVariant) {
       // Nếu đã có mặt hàng này trong giỏ hàng
       let update = { $inc: { "cart.cartDetail.$.quantity": quantity } };
 
-      if (action === 'changeQuantity') {
-        update = { $set: { "cart.cartDetail.$.quantity": quantity } }
+      if (action === "changeQuantity") {
+        update = { $set: { "cart.cartDetail.$.quantity": quantity } };
       }
 
       const response = await userModel.findOneAndUpdate(
-        { _id: userId, "cart.cartDetail.variant": variant, "cart.cartDetail.color": variantEle?.color, "cart.cartDetail.size": variantEle?.size },
+        {
+          _id: userId,
+          "cart.cartDetail.variant": variant,
+          "cart.cartDetail.color": variantEle?.color,
+          "cart.cartDetail.size": variantEle?.size,
+        },
         update,
         { new: true }
       );
@@ -410,15 +416,23 @@ const updateCart = async (req, res) => {
       // Nếu chưa có mặt hàng này trong giỏ hàng
       const productId = variantEle?.productId?.toString();
 
-
-      const cartDetail = { variant, quantity, productId, color: variantEle?.color, size: variantEle?.size, image: variantEle?.image, name: variantEle?.name, priceDetail: { ...variantEle.priceDetail } }
+      const cartDetail = {
+        variant,
+        quantity,
+        productId,
+        color: variantEle?.color,
+        size: variantEle?.size,
+        image: variantEle?.image,
+        name: variantEle?.name,
+        priceDetail: { ...variantEle.priceDetail },
+      };
 
       const response = await User.findByIdAndUpdate(
         userId,
         {
           $push: {
-            "cart.cartDetail": cartDetail
-          }
+            "cart.cartDetail": cartDetail,
+          },
         },
         { new: true, upsert: true }
       );
@@ -460,7 +474,7 @@ const removeVariantInCart = async (req, res) => {
 
     const response = await userModel.findByIdAndUpdate(
       userId,
-      { $pull: { "cart.cartDetail": { variant: variant, } } },
+      { $pull: { "cart.cartDetail": { variant: variant } } },
       { new: true }
     );
 

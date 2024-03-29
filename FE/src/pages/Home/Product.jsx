@@ -41,8 +41,8 @@ const Product = () => {
               <h4>
                 {(data.priceDetail &&
                   formatNumber(
-                    data.priceDetail.price *
-                      ((100 - data.priceDetail.saleRatio) / 100)
+                    data.priceDetail?.price *
+                      ((100 - data?.priceDetail.saleRatio) / 100)
                   )) ||
                   "0"}
                 đ

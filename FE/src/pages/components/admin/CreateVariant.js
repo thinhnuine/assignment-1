@@ -33,11 +33,11 @@ const CreateVariant = (id) => {
           image: values.image,
           priceDetail: {
             price: values.price,
-            saleRatio: values.saleRatio,
+            saleRatio: values?.saleRatio,
           },
           color: values.color,
           size: values.size,
-          countInStock: values.countInStock,
+          countInStock: values?.countInStock,
         }
       );
       toast({

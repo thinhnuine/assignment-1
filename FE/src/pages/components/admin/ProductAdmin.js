@@ -181,13 +181,13 @@ const ManageProduct = () => {
         title: "Price",
         dataIndex: "priceDetail",
         key: "priceDetail",
-        render: (_, variants) => <p>{variants.priceDetail.price}đ</p>,
+        render: (_, variants) => <p>{variants?.priceDetai?.price}đ</p>,
       },
       {
         title: "Sale Ratio",
         dataIndex: "priceDetail",
         key: "priceDetail",
-        render: (_, variants) => <a>{variants.priceDetail.saleRatio}%</a>,
+        render: (_, variants) => <a>{variants?.priceDetail?.saleRatio}%</a>,
       },
       {
         title: "Quantity",
