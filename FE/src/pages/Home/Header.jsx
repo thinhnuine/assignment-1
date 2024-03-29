@@ -42,13 +42,10 @@ const Header = () => {
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify({ email: userName, password }), // body data type must match "Content-Type" header
-    }).then(res =>
-      res.json().then(data => {
+    }).then((res) =>
+      res.json().then((data) => {
         if (data.email === userName) {
           localStorage.setItem("user", JSON.stringify(data));
-          localStorage.setItem("refreshToken", data.refreshToken);
-          localStorage.setItem("accessToken", data.accessToken);
-          localStorage.setItem("id", data.id);
           setHandleModal(!handleModal);
           navigate("/");
           message.success("Đăng nhập thành công!");
@@ -82,8 +79,8 @@ const Header = () => {
       }), // body data type must match "Content-Type" header
     });
 
-    response.then(res =>
-      res.json().then(data => {
+    response.then((res) =>
+      res.json().then((data) => {
         if (checkPasswordRegister != passwordRegister) {
           alert("Mật khẩu không trùng khớp!");
           return false;
@@ -154,7 +151,10 @@ const Header = () => {
           </div>
           <div>
             <div className="flex lg:hidden justify-between container">
-              <MenuOutlined className="text-[20px]" onClick={() => setMenuMobile(true)} />
+              <MenuOutlined
+                className="text-[20px]"
+                onClick={() => setMenuMobile(true)}
+              />
 
               <Link to="/">
                 <p className="text-3xl">Mind Clothing Store</p>
@@ -301,7 +301,10 @@ const Header = () => {
         {login ? (
           <div>
             <div className="max-w-[500px] mx-auto">
-              <h1 className="text-3xl font-bold" style={{ marginBottom: "10px" }}>
+              <h1
+                className="text-3xl font-bold"
+                style={{ marginBottom: "10px" }}
+              >
                 Đăng nhập
               </h1>
 
@@ -321,7 +324,7 @@ const Header = () => {
                   backgroundColor: "#ddd",
                   outline: "none",
                 }}
-                onChange={event => setUserName(event.target.value)}
+                onChange={(event) => setUserName(event.target.value)}
                 type="text"
                 placeholder="Mời nhập tên tài khoản"
                 name="username"
@@ -342,7 +345,7 @@ const Header = () => {
                   backgroundColor: "#ddd",
                   outline: "none",
                 }}
-                onChange={event => setPassword(event.target.value)}
+                onChange={(event) => setPassword(event.target.value)}
                 type="password"
                 placeholder="******"
                 name="password"
@@ -390,7 +393,7 @@ const Header = () => {
                   outline: "none",
                 }}
                 value={userNameRegister}
-                onChange={event => setUserNameRegister(event.target.value)}
+                onChange={(event) => setUserNameRegister(event.target.value)}
                 type="text"
                 placeholder="Mời nhập tên tài khoản"
                 name="username"
@@ -412,7 +415,7 @@ const Header = () => {
                   outline: "none",
                 }}
                 value={passwordRegister}
-                onChange={event => setPasswordRegister(event.target.value)}
+                onChange={(event) => setPasswordRegister(event.target.value)}
                 type="password"
                 placeholder="******"
                 name="password"
@@ -434,7 +437,9 @@ const Header = () => {
                   outline: "none",
                 }}
                 value={checkPasswordRegister}
-                onChange={event => setCheckPasswordRegister(event.target.value)}
+                onChange={(event) =>
+                  setCheckPasswordRegister(event.target.value)
+                }
                 type="password"
                 placeholder="******"
                 name="password-repeat"

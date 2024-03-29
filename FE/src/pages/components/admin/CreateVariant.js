@@ -1,7 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { Button, Form, Input, InputNumber, Modal } from "antd";
 import React, { useState } from "react";
-import { createApiPjc } from "../../../services";
+import { createApiAdmin } from "../../../services/admin-service";
 
 const CreateVariant = (id) => {
   const [open, setOpen] = useState(false);
@@ -26,7 +26,7 @@ const CreateVariant = (id) => {
   const onFinish = async (values) => {
     console.log(values);
     try {
-      const result = await createApiPjc().post(
+      const result = await createApiAdmin().post(
         `http://localhost:8000/admin/variant/create-variant/${id.id}`,
         {
           name: values.name,
