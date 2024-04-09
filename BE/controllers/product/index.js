@@ -7,6 +7,7 @@ const orderModel = require("../../models/Order.js");
 
 const getAllProduct = async (req, res) => {
   try {
+    let query = {};
     // Nếu có trường search được truyền lên, thêm điều kiện tìm kiếm theo tên sản phẩm
     if (req.query.search) {
       query = { name: { $regex: req.query.search, $options: 'i' } };

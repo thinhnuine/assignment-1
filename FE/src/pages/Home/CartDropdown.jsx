@@ -34,7 +34,7 @@ export default function CartDropdown() {
       if (error instanceof AxiosError) {
         message.error(error.response.data?.message || "Cập nhật giỏ hàng thất bại");
       } else {
-        message.error(error?.message);
+        message.error("Cập nhật giỏ hàng thất bại");
       }
     } finally {
       setIsLoading(false);
