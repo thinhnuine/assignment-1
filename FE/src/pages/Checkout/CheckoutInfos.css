@@ -1,0 +1,20 @@
+.ship-type-radio,
+.payment-type-radio {
+  width: 100%;
+}
+
+.ship-type-radio label>span+span,
+.payment-type-radio label>span+span {
+  width: 100%;
+}
+
+
+.payment-type-radio .cod-ico>svg {
+  width: 22px;
+  height: 22px;
+}
+
+.checkout-heading-icon>svg {
+  width: 30px;
+  height: 30px;
+}

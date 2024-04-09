@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import Headers from "./Header";
 import Footer from "./Footer";
 import { Button, message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { formatCurrencyInVnd } from "../../helper";
 import { useUser } from "../../UserContext";
 import emptyCartSvg from "../../assets/images/cart_empty.svg";
 import axios, { AxiosError } from "axios";
 import CartDropdown from "./CartDropdown";
 import { createApiUser } from "../../services/user-service";
+
+
 export default function Cart() {
   const { user, updateUser } = useUser();
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -92,6 +95,10 @@ export default function Cart() {
     }
   };
 
+  const handleNavigateToCheckout = () => {
+    navigate('/checkout')
+  }
+
   return (
     <>
       <Headers />
@@ -168,9 +175,8 @@ export default function Cart() {
                             <div className="flex justify-center text-sm">
                               <button
                                 type="button"
-                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${
-                                  isLoading ? "pointer-events-none" : ""
-                                }`}
+                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${isLoading ? "pointer-events-none" : ""
+                                  }`}
                                 onClick={() =>
                                   handleChangeQuantity("decrease", cartItem)
                                 }
@@ -179,9 +185,8 @@ export default function Cart() {
                               </button>
                               <input
                                 type="text"
-                                className={`rounded-none border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b ${
-                                  isLoading ? "pointer-events-none" : ""
-                                }`}
+                                className={`rounded-none border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b ${isLoading ? "pointer-events-none" : ""
+                                  }`}
                                 maxlength="2"
                                 pattern="[0-9]*"
                                 value={cartItem.quantity}
@@ -194,9 +199,8 @@ export default function Cart() {
                                 }
                               />
                               <button
-                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${
-                                  isLoading ? "pointer-events-none" : ""
-                                }`}
+                                className={`rounded-none border border-[#e5e5e5] p-0 m-0 w-7 h-7 leading-6 text-lg ${isLoading ? "pointer-events-none" : ""
+                                  }`}
                                 onClick={() =>
                                   handleChangeQuantity("increase", cartItem)
                                 }
@@ -227,6 +231,7 @@ export default function Cart() {
                     type="primary"
                     className="bg-black w-full lg:w-[300px] mt-3 !rounded-none"
                     size="large"
+                    onClick={handleNavigateToCheckout}
                   >
                     Thanh toán
                   </Button>

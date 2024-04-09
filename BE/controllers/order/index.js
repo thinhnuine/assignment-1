@@ -52,7 +52,7 @@ const createOrder = async (req, res) => {
         // Tính giá của order
 
         await variant.save();
-        await product.save(); 
+        await product.save();
       } else {
         return res
           .status(400)
@@ -260,11 +260,15 @@ const createOrderPaymentPaypal = async (req, res) => {
     // use the cart information passed from the front-end to calculate the order amount detals
     const { _id } = req.user;
     const { orderDetail, totalPrice, shippingAddress } = req.body;
+
     // const { jsonResponse, httpStatusCode } = await createOrderPayPal(cart);
-    const rs = await orderModel.create({
+    const userCart = await orderModel.create({
       orderDetail,
       totalPrice,
-      orderBy: _id,
+      orderedBy: _id,
+      shippingAddress,
+      status: '2',
+      paymentMethod: '1'
     });
     // res.status(httpStatusCode).json(jsonResponse);
     return res.json({

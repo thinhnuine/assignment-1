@@ -329,7 +329,7 @@ const getUserById = async (req, res) => {
       user: result,
       status: "success",
     });
-  } catch (error) {}
+  } catch (error) { }
 };
 
 // Hàm tính tổng tiền từ danh sách sản phẩm trong giỏ hàng
@@ -494,6 +494,32 @@ const removeVariantInCart = async (req, res) => {
   }
 };
 
+const emptyCartInUser = async (req, res) => {
+  try {
+    const userId = req.user._id?.toString();
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Người dùng không tồn tại' });
+    }
+
+    user.cart.cartDetail = [];
+    user.cart.totalPrice = 0;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      mes: "Xoá cart thành công",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      mes: "Internal server error",
+    });
+  }
+};
+
 const getCurrent = async (req, res) => {
   const { _id } = req.user;
   const user = await User.findById(_id).select("-password -role");
@@ -516,4 +542,5 @@ module.exports = {
   getUserById,
   updateCart,
   removeVariantInCart,
+  emptyCartInUser
 };

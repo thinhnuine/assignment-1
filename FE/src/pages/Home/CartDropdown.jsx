@@ -4,11 +4,12 @@ import React, { useState } from "react";
 import { useUser } from "../../UserContext";
 import emptyCartSvg from "../../assets/images/cart_empty.svg";
 import { formatCurrencyInVnd } from "../../helper";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./CartDropdown.css";
 import { createApiUser } from "../../services/user-service";
 export default function CartDropdown() {
   const { user, updateUser } = useUser();
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -83,6 +84,10 @@ export default function CartDropdown() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleNavigateToCheckout = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -172,7 +177,10 @@ export default function CartDropdown() {
                 </div>
               </div>
               <div>
-                <button className="w-full text-white bg-black text-center leading-10">
+                <button
+                  className="w-full text-white bg-black text-center leading-10"
+                  onClick={handleNavigateToCheckout}
+                >
                   Thanh toán
                 </button>
               </div>
