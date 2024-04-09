@@ -14,11 +14,10 @@ const { OAuth2Client } = require("google-auth-library");
 
 const GOOGLE_MAILER_CLIENT_ID =
   "1051458480695-c0bk99e282fpu8nou08p0hp2o4n4e42a.apps.googleusercontent.com";
-const GOOGLE_MAILER_CLIENT_SECRET = "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";
+const GOOGLE_MAILER_CLIENT_SECRET = "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";
 const GOOGLE_MAILER_REFRESH_TOKEN =
-  "1//04DnrxxL5l_MwCgYIARAAGAQSNwF-L9IrLbxQuq_EaB2ufY3EiY552qEaQ_-3os-MlZULq-2lm_xleaV5j_ORy0P7HvPqLgjrB4s";
+  "1//04_XGtNjjx1AACgYIARAAGAQSNwF-L9Ir336_QzZQkbyE2eTLiKCA0LOGD43BivXonGcpnZqgkz4aM3NJNV2PBFM6LlA9tpY7IWM";
 const ADMIN_EMAIL_ADDRESS = "ndtuneti@gmail.com";
-
 const login = async (req, res) => {
   try {
     const { password, email } = req.body;

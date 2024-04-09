@@ -140,23 +140,23 @@ function Dashboard() {
           value={statistical}
           onChange={(e) => setStatistical(e.target.value)}
         >
-          <Radio.Button value="1">Yearly</Radio.Button>
-          <Radio.Button value="2">Monthly</Radio.Button>
-          <Radio.Button value="3">Daily</Radio.Button>
+          <Radio.Button value={1}>Yearly</Radio.Button>
+          <Radio.Button value={2}>Monthly</Radio.Button>
+          <Radio.Button value={3}>Daily</Radio.Button>
         </Radio.Group>
       </Space>
       <Space size={100} direction="horizontal">
-        {statistical == 2 ? <DashboardChart /> : null}
-        {statistical == 2 ? <RevenueChart /> : null}
-        {statistical == 1 ? <YearlyOrderChart /> : null}
-        {statistical == 1 ? <YearlyRevenueChart /> : null}
-        {statistical == 3 ? <DailyOrderChart /> : null}
-        {statistical == 3 ? <DailyRevenueChart /> : null}
+        {statistical === 2 ? <DashboardChart /> : null}
+        {statistical === 2 ? <RevenueChart /> : null}
+        {statistical === 1 ? <YearlyOrderChart /> : null}
+        {statistical === 1 ? <YearlyRevenueChart /> : null}
+        {statistical === 3 ? <DailyOrderChart /> : null}
+        {statistical === 3 ? <DailyRevenueChart /> : null}
       </Space>
       <Space size={100} direction="horizontal">
-        {statistical == 3 ? <DailyUserChart /> : null}
-        {statistical == 1 ? <YearlyUserChart /> : null}
-        {statistical == 2 ? <MonthlyUserChart /> : null}
+        {statistical === 3 ? <DailyUserChart /> : null}
+        {statistical === 1 ? <YearlyUserChart /> : null}
+        {statistical === 2 ? <MonthlyUserChart /> : null}
         <RecentOrders />
       </Space>
     </Space>

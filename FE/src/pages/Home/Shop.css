@@ -25,13 +25,14 @@
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 20px;
 }
 
 .containerz {
-  width: 25%;
+  width: 30%;
   box-sizing: border-box;
+  height:fit-content;
   padding: 10px;
   margin: 10px;
   text-align: center;
@@ -40,9 +41,7 @@
   transition: box-shadow 0.3s ease-in-out;
 }
 
-.containerz:hover {
-  box-shadow: 0 10px 8px rgba(78, 126, 59, 0.826);
-}
+
 
 .containerz img {
   max-width: 60%;

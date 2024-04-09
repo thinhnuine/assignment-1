@@ -3,7 +3,7 @@ import { Router } from "react-router-dom";
 
 const defaultConfig = {
   timeout: 50000,
-  basePath: "http://localhost:8000/",
+  baseURL: "http://localhost:8000/",
 };
 
 const addInterceptorResponse = (instance) => {
@@ -70,7 +70,7 @@ const createProduct = (data) => {
 
 const getProduct = (pageSize = 3, pageIndex = 1) => {
   return createApiAdmin().get(
-    `/products/get-pagging?pageSize=${pageSize}&pageIndex=${pageIndex}`
+    `/product/get-all-paging?pageSize=${pageSize}&pageIndex=${pageIndex}`
   );
 };
 
