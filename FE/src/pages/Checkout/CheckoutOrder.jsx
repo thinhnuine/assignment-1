@@ -31,7 +31,7 @@ const CheckoutOrder = ({ form }) => {
   };
 
   return (
-    <div className="border-l h-100 bg-[#fafafa00] pb-5">
+    <div className="lg:border-l h-100 bg-[#fafafa00] pb-5">
       <div className="cart-title">
         <div className="title text-[#333] text-lg font-semibold py-[20px] pl-5 border-b">
           Đơn hàng ({totalItemInCarts} sản phẩm)

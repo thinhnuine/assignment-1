@@ -18,3 +18,16 @@
   width: 30px;
   height: 30px;
 }
+
+.ship-type-radio .ant-radio.ant-radio-checked span.ant-radio-inner,
+.payment-type-radio .ant-radio.ant-radio-checked span.ant-radio-inner {
+  background-color: #000;
+  border-color: #000;
+}
+
+.ant-form-item input.ant-input:focus,
+.ant-form-item .ant-select-focused .ant-select-selector,
+.ant-form-item .ant-input:focus {
+  border-color: #000 !important;
+  box-shadow: 0 0 0 1px #000000 !important;
+}
