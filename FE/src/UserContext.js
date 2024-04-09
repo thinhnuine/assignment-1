@@ -7,11 +7,13 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoadingUser, setIsLoadingUser] = useState(false);
 
   const updateUser = async () => {
     try {
       const a = !!localStorage.getItem("user");
       console.log(a);
+      setIsLoadingUser(true);
       const response = await createApiUser().get(
         "http://localhost:8000/user/get-current"
       );
@@ -21,6 +23,8 @@ export const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error updating user:", error);
+    } finally {
+      setIsLoadingUser(false)
     }
   };
 
@@ -33,7 +37,7 @@ export const UserProvider = ({ children }) => {
   }, []); // Gọi một lần khi component mount và logic đăng nhập thay đổi
 
   return (
-    <UserContext.Provider value={{ setUser, isLoggedIn, updateUser, user }}>
+    <UserContext.Provider value={{ setUser, isLoggedIn, updateUser, user, isLoadingUser }}>
       {children}
     </UserContext.Provider>
   );

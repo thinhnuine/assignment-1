@@ -8,6 +8,8 @@ import Cart from "../pages/Home/Cart";
 import Shop from "../pages/Home/Shop";
 import Admin from "../pages/Home/Admin";
 import Detail from "../pages/Home/Detail";
+import SearchPage from "../pages/Home/SearchPage";
+import CheckoutPage from "../pages/Checkout";
 
 const Routers = () => {
   const isAuthenticated =
@@ -21,7 +23,7 @@ const Routers = () => {
           path="/admin"
           element={
             isAuthenticated &&
-            JSON.parse(localStorage.getItem("user/admin"))?.role === "admin" ? (
+              JSON.parse(localStorage.getItem("user/admin"))?.role === "admin" ? (
               <Admin />
             ) : (
               <Navigate to="/login" />
@@ -32,7 +34,7 @@ const Routers = () => {
           path="/login"
           element={
             isAuthenticated &&
-            JSON.parse(localStorage.getItem("user/admin"))?.role === "admin" ? (
+              JSON.parse(localStorage.getItem("user/admin"))?.role === "admin" ? (
               <Navigate to="/admin" />
             ) : (
               <Login />
@@ -47,6 +49,8 @@ const Routers = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/detail/:id" element={<Detail />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/checkout" index element={<CheckoutPage />} />
         {/* <Route path="/admin" element={<Admin />} />  */}
       </Routes>
     </>

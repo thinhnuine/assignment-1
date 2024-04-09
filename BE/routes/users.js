@@ -11,6 +11,7 @@ const {
   updateCart,
   removeVariantInCart,
   getCurrent,
+  emptyCartInUser,
 } = require("../controllers/userControler/index.js");
 const { authentication } = require("../middlewares/authenticator.js");
 const { authorization } = require("../middlewares/authorization.js");
@@ -26,6 +27,7 @@ userRouter.get("/get-current", authentication, getCurrent);
 userRouter.post("/register-admin", authentication, authorization, register); // chỉ khi đăng nhập mới sửa dc rule
 userRouter.put("/cart", authentication, updateCart);
 userRouter.delete("/remove-cart/:id", authentication, removeVariantInCart);
+userRouter.delete("/empty-cart", authentication, emptyCartInUser);
 userRouter.put("/:id", authentication, updateUser);
 userRouter.delete("/:id", authentication, authorization, deleteUser);
 userRouter.get("/", authentication, authorization, getAllUser);

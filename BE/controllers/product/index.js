@@ -7,8 +7,13 @@ const orderModel = require("../../models/Order.js");
 
 const getAllProduct = async (req, res) => {
   try {
+    // Nếu có trường search được truyền lên, thêm điều kiện tìm kiếm theo tên sản phẩm
+    if (req.query.search) {
+      query = { name: { $regex: req.query.search, $options: 'i' } };
+    }
+
     const products = await productModel
-      .find()
+      .find(query)
       .populate("category")
       .populate("variants");
     return res.status(200).json({ products });
