@@ -187,7 +187,7 @@ export default function Cart() {
                                 type="text"
                                 className={`rounded-none border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b ${isLoading ? "pointer-events-none" : ""
                                   }`}
-                                maxlength="2"
+                                maxLength="2"
                                 pattern="[0-9]*"
                                 value={cartItem.quantity}
                                 onChange={(event) =>
