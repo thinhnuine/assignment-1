@@ -123,7 +123,7 @@ const CheckoutInfos = ({ form }) => {
   }, [selectedDistrictId, form]);
 
   return (
-    <div className="p-8">
+    <div className="px-0 py-8 lg:p-8">
       <div className="text-3xl text-center mb-3">
         <Link to="/">Mind Clothing Store</Link>
       </div>

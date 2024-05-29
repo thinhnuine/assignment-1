@@ -34,7 +34,7 @@ export default function CartDropdown() {
       if (error instanceof AxiosError) {
         message.error(error.response.data?.message || "Cập nhật giỏ hàng thất bại");
       } else {
-        message.error(error?.message);
+        message.error("Cập nhật giỏ hàng thất bại");
       }
     } finally {
       setIsLoading(false);
@@ -100,7 +100,10 @@ export default function CartDropdown() {
                 const priceAProduct =
                   cartItem?.priceDetail?.price * ((100 - cartItem?.priceDetail?.saleRatio) / 100);
                 return (
-                  <div className="cart-item flex justify-between gap-x-3 border-b border-[#ebebeb] pb-3 mb-3">
+                  <div
+                    key={cartItem._id}
+                    className="cart-item flex justify-between gap-x-3 border-b border-[#ebebeb] pb-3 mb-3"
+                  >
                     <div className="product-image flex-shrink-0">
                       <img src={cartItem.image} alt="product_image" className="w-16 h-16" />
                     </div>
@@ -135,7 +138,7 @@ export default function CartDropdown() {
                               className={`rounded-none border-[#e5e5e5] p-0 m-0 w-9 h-7 text-center border-t border-b disabled:bg-[#0000000a] disabled:cursor-not-allowed ${
                                 isLoading ? "pointer-events-none" : ""
                               }`}
-                              maxlength="2"
+                              maxLength="2"
                               pattern="[0-9]*"
                               value={cartItem.quantity}
                               onChange={event =>
